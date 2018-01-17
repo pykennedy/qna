@@ -3,6 +3,9 @@ package pyk.qna;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -24,6 +27,14 @@ public class MainActivity extends AppCompatActivity {
     purple = (View) findViewById(R.id.purple);
     blurView = (BlurView) findViewById(R.id.blurView);
     red = (View) findViewById(R.id.red);
+  
+    ItemAdapter itemAdapter;
+    
+    itemAdapter = new ItemAdapter();
+    RecyclerView recyclerView = (RecyclerView) this.findViewById(R.id.rv_list);
+    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    recyclerView.setItemAnimator(new DefaultItemAnimator());
+    recyclerView.setAdapter(itemAdapter);
     
     setupBlurView();
   }
