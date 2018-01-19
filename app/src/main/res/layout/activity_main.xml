@@ -15,11 +15,27 @@
         android:layout_marginTop="0dp"
         android:background="#aa44cc"/>
 
+    <View
+        android:id="@+id/green"
+        android:layout_width="100dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginStart="50dp"
+        android:background="#004400"/>
+
+    <View
+        android:id="@+id/yellow"
+        android:layout_width="100dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="350dp"
+        android:layout_marginStart="100dp"
+        android:background="#aaaa00"/>
+
     <eightbitlab.com.blurview.BlurView
         android:id="@+id/blurView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:blurOverlayColor="#55cccccc">
+        app:blurOverlayColor="#5500cccc">
 
         <View
             android:id="@+id/red"
@@ -31,5 +47,10 @@
 
     </eightbitlab.com.blurview.BlurView>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"/>
 
 </FrameLayout>
