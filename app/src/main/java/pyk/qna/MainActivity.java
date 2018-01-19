@@ -14,9 +14,10 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class MainActivity extends AppCompatActivity {
   FrameLayout frameLayout;
-  View purple;
-  BlurView blurView;
-  View red;
+  View        purple;
+  BlurView    blurView;
+  View        red;
+  static Drawable background;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +28,10 @@ public class MainActivity extends AppCompatActivity {
     purple = (View) findViewById(R.id.purple);
     blurView = (BlurView) findViewById(R.id.blurView);
     red = (View) findViewById(R.id.red);
-  
+    
     ItemAdapter itemAdapter;
     
-    itemAdapter = new ItemAdapter();
+    itemAdapter = new ItemAdapter(this, frameLayout);
     RecyclerView recyclerView = (RecyclerView) this.findViewById(R.id.rv_list);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -41,15 +42,14 @@ public class MainActivity extends AppCompatActivity {
   
   private void setupBlurView() {
     final float radius = 25f;
-    final float minBlurRadius = 10f;
-    final float step = 4f;
     
     //set background, if your root layout doesn't have one
     final Drawable windowBackground = getWindow().getDecorView().getBackground();
+    background = windowBackground;
     
-    final BlurView.ControllerSettings topViewSettings = blurView.setupWith(frameLayout)
-                                                                   .windowBackground(windowBackground)
-                                                                   .blurAlgorithm(new RenderScriptBlur(this))
-                                                                   .blurRadius(radius);
+    blurView.setupWith(frameLayout)
+            .windowBackground(windowBackground)
+            .blurAlgorithm(new RenderScriptBlur(this))
+            .blurRadius(radius);
   }
 }

@@ -35,7 +35,7 @@
         android:id="@+id/blurView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:blurOverlayColor="#55cccccc">
+        app:blurOverlayColor="#5500cccc">
 
         <View
             android:id="@+id/red"

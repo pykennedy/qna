@@ -6,20 +6,21 @@
               android:orientation="vertical">
 
     <eightbitlab.com.blurview.BlurView
-        android:id="@+id/blurItemView"
+        android:id="@+id/blurView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         app:blurOverlayColor="#55cc00cc">
 
         <TextView
             android:id="@+id/poi_item_name"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginBottom="5dp"
             android:elevation="2dp"
             android:maxLines="1"
             android:text="not found"
-            android:textColor="#000000"/>
+            android:background="#220000cc"
+            android:textColor="#555555"/>
 
     </eightbitlab.com.blurview.BlurView>
 
