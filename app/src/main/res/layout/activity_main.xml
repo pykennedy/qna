@@ -6,51 +6,60 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pyk.qna.MainActivity">
-
-    <View
-        android:id="@+id/purple"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="0dp"
-        android:background="#aa44cc"/>
-
-    <View
-        android:id="@+id/green"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginStart="50dp"
-        android:background="#004400"/>
-
-    <View
-        android:id="@+id/yellow"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="350dp"
-        android:layout_marginStart="100dp"
-        android:background="#aaaa00"/>
+    tools:context="pyk.qna.MainActivity"
+    android:background="@drawable/background">
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurViewTop"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:blurOverlayColor="#11ffffff">
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="#ffffff"
+            android:textSize="32sp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
+            android:layout_gravity="center_vertical"
+            android:text="qna"/>
+        <com.github.pavlospt.CircleView
+            android:layout_height="50dp"
+            android:layout_width="50dp"
+            app:cv_titleText="\?"
+            app:cv_titleSize="32dp"
+            app:cv_titleColor="#000"
+            app:cv_fillColor="#ffffff"
+            app:cv_strokeColorValue="#999999"
+            app:cv_fillRadius="1"
+            android:layout_marginEnd="2dp"
+            android:layout_gravity="end|center_vertical"/>
+    </eightbitlab.com.blurview.BlurView>
 
     <eightbitlab.com.blurview.BlurView
-        android:id="@+id/blurView"
+        android:id="@+id/blurViewBottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:blurOverlayColor="#5500cccc">
-
-        <View
-            android:id="@+id/red"
-            android:layout_width="150dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="0dp"
-            android:background="#aa0000"
-            android:layout_gravity="right"/>
-
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom"
+        app:blurOverlayColor="#11ffffff">
+        <TextView
+            android:id="@+id/qa"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="#ffffff"
+            android:textSize="32sp"
+            android:layout_marginTop="2dp"
+            android:layout_gravity="center"
+            android:text="question"/>
     </eightbitlab.com.blurview.BlurView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"/>
-
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:padding="2dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"/>
 </FrameLayout>

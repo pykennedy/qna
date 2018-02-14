@@ -1,26 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_list_item"
+                android:orientation="vertical">
 
     <eightbitlab.com.blurview.BlurView
         android:id="@+id/blurItemView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        app:blurOverlayColor="#55cc00cc">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/rounded_list_item"
+        app:blurOverlayColor="#11ffffff">
 
-        <TextView
-            android:id="@+id/poi_item_name"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:elevation="2dp"
-            android:maxLines="1"
-            android:text="not found"
-            android:textColor="#000000"/>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+            <com.github.pavlospt.CircleView
+                android:id="@+id/imgback_list"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="2dp"
+                app:cv_fillColor="#ffffff"
+                app:cv_fillRadius="1"
+                app:cv_strokeColorValue="#999999"
+                app:cv_titleColor="#000"
+                app:cv_titleSize="32dp"
+                app:cv_titleText="\?"/>
+
+            <TextView
+                android:id="@+id/question_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="4dp"
+                android:layout_toEndOf="@+id/imgback_list"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#ffffff"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/username_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@+id/imgback_list"
+                android:layout_below="@+id/question_list"
+                android:text="worldsmostinterestingman"
+                android:maxLines="1"
+                android:textColor="#00a0ff"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/datetime_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@+id/imgback_list"
+                android:layout_below="@+id/username_list"
+                android:text="01/01/1980 24:00"
+                android:maxLines="1"
+                android:textColor="#50ffffff"
+                android:textSize="10sp"/>
+
+        </RelativeLayout>
+
 
     </eightbitlab.com.blurview.BlurView>
 
-</LinearLayout>
+</FrameLayout>
