@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#464646</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryAccent">#00e5ff</color>
+    <color name="colorSecondaryAccent">#1de9b6</color>
+
+    <!-- Black and White -->
+    <color name="white_primary">#FFFFFF</color>
+    <color name="white_primary_87">#DAFFFFFF</color>
+    <color name="white_primary_54">#79FFFFFF</color>
+    <color name="white_primary_32">#50FFFFFF</color>
+    <color name="black_87">#DD000000</color>
+    <color name="black_54">#79000000</color>
+    <color name="black_26">#3A000000</color>
+    <color name="black_12">#1B000000</color>
+
+    <!-- Backgrounds -->
+    <color name="actionbar_tint">#11FFFFFF</color>
+    <color name="list_item_tint">#11FFFFFF</color>
+    <color name="photo_frame">@color/colorPrimary</color>
+    <color name="empty_photo">@color/white_primary</color>
+
 </resources>
