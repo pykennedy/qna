@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import eightbitlab.com.blurview.BlurView;
@@ -14,9 +13,8 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class MainActivity extends AppCompatActivity {
   FrameLayout frameLayout;
-  View        purple;
-  BlurView    blurView;
-  View        red;
+  BlurView    blurViewTop;
+  BlurView    blurViewBottom;
   static Drawable background;
   
   @Override
@@ -25,9 +23,8 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     
     frameLayout = (FrameLayout) findViewById(R.id.root);
-    purple = (View) findViewById(R.id.purple);
-    blurView = (BlurView) findViewById(R.id.blurView);
-    red = (View) findViewById(R.id.red);
+    blurViewTop = (BlurView) findViewById(R.id.blurViewTop);
+    blurViewBottom = (BlurView) findViewById(R.id.blurViewBottom);
     
     ItemAdapter itemAdapter;
     
@@ -47,9 +44,13 @@ public class MainActivity extends AppCompatActivity {
     final Drawable windowBackground = getWindow().getDecorView().getBackground();
     background = windowBackground;
     
-    blurView.setupWith(frameLayout)
+    blurViewTop.setupWith(frameLayout)
             .windowBackground(windowBackground)
             .blurAlgorithm(new RenderScriptBlur(this))
             .blurRadius(radius);
+    blurViewBottom.setupWith(frameLayout)
+               .windowBackground(windowBackground)
+               .blurAlgorithm(new RenderScriptBlur(this))
+               .blurRadius(radius);
   }
 }

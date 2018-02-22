@@ -17,14 +17,14 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder> {
   
   private List<String> poiItemList = null;
-  Context context;
+  Context     context;
   FrameLayout frameLayout;
   
   public ItemAdapter(Context context, FrameLayout frameLayout) {
     this.context = context;
     this.frameLayout = frameLayout;
     List<String> s = new ArrayList<String>();
-    for(int i = 0; i < 20; i++) {
+    for (int i = 0; i < 20; i++) {
       s.add("aasdfasfdsdfdsfasdfasdfasf");
     }
     poiItemList = s;
@@ -42,7 +42,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
   
   @Override
   public void onBindViewHolder(ItemAdapterViewHolder itemAdapterViewHolder, int index) {
-    itemAdapterViewHolder.update("asdfasdfasdfasd");
+    itemAdapterViewHolder.update("Why did the chicken cross the road? Like really why tho... smh");
   }
   
   @Override
@@ -54,8 +54,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
   
   public void setAll() {
     List<String> s = new ArrayList<String>();
-    for(int i = 0; i < 20; i++) {
-      s.add("aasdfasfdsdfdsfasdfasdfasf");
+    for (int i = 0; i < 20; i++) {
+      s.add("Why did the chicken cross the road? Like really why tho... smh");
     }
     poiItemList = s;
     notifyDataSetChanged();
@@ -68,14 +68,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
     
     public ItemAdapterViewHolder(View itemView, FrameLayout frameLayout) {
       super(itemView);
-      title = (TextView) itemView.findViewById(R.id.poi_item_name);
-  
+      title = (TextView) itemView.findViewById(R.id.question_list);
+      
+      title.setClipToOutline(true);
+      
       blurView = itemView.findViewById(R.id.blurItemView);
       
       blurView.setupWith(frameLayout)
               .windowBackground(MainActivity.background)
               .blurAlgorithm(new RenderScriptBlur(context))
               .blurRadius(25f);
+      blurView.setClipToOutline(true);
     }
     
     void update(String s) {

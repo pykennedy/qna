@@ -6,51 +6,49 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context="pyk.qna.MainActivity">
 
-    <View
-        android:id="@+id/purple"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="0dp"
-        android:background="#aa44cc"/>
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurViewTop"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:blurOverlayColor="@color/actionbar_tint">
 
-    <View
-        android:id="@+id/green"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginStart="50dp"
-        android:background="#004400"/>
+        <TextView
+            android:id="@+id/title"
+            style="@style/top_actionbar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="qna"/>
 
-    <View
-        android:id="@+id/yellow"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="350dp"
-        android:layout_marginStart="100dp"
-        android:background="#aaaa00"/>
+        <com.github.pavlospt.CircleView
+            style="@style/actionbar_photo_background"/>
+    </eightbitlab.com.blurview.BlurView>
 
     <eightbitlab.com.blurview.BlurView
-        android:id="@+id/blurView"
+        android:id="@+id/blurViewBottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:blurOverlayColor="#5500cccc">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom"
+        app:blurOverlayColor="@color/actionbar_tint">
 
-        <View
-            android:id="@+id/red"
-            android:layout_width="150dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="0dp"
-            android:background="#aa0000"
-            android:layout_gravity="right"/>
-
+        <TextView
+            android:id="@+id/qa"
+            style="@style/bottom_actionbar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:text="question"/>
     </eightbitlab.com.blurview.BlurView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"/>
-
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:padding="2dp"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"/>
 </FrameLayout>

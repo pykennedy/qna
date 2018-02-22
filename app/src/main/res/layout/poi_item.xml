@@ -1,26 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@drawable/rounded_list_item"
+             android:orientation="vertical">
 
     <eightbitlab.com.blurview.BlurView
         android:id="@+id/blurItemView"
+        style="@style/list_item_tint"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        app:blurOverlayColor="#55cc00cc">
+        android:layout_height="?attr/actionBarSize">
 
-        <TextView
-            android:id="@+id/poi_item_name"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:elevation="2dp"
-            android:maxLines="1"
-            android:text="not found"
-            android:textColor="#000000"/>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+            <com.github.pavlospt.CircleView
+                android:id="@+id/imgback_list"
+                style="@style/list_item_photo_background"/>
+
+            <TextView
+                android:id="@+id/question_list"
+                style="@style/list_item_qa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/imgback_list"/>
+
+            <TextView
+                android:id="@+id/username_list"
+                style="@style/list_item_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/question_list"
+                android:layout_toEndOf="@+id/imgback_list"
+                android:text="worldsmostinterestingman"/>
+
+            <TextView
+                android:id="@+id/datetime_list"
+                style="@style/list_item_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username_list"
+                android:layout_toEndOf="@+id/imgback_list"
+                android:text="01/01/1980 24:00"/>
+
+        </RelativeLayout>
+
 
     </eightbitlab.com.blurview.BlurView>
 
-</LinearLayout>
+</FrameLayout>
