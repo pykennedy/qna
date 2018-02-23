@@ -1,4 +1,4 @@
-package pyk.qna;
+package pyk.qna.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +13,8 @@ import java.util.List;
 
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
+import pyk.qna.R;
+import pyk.qna.controller.activity.MainActivity;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder> {
   
