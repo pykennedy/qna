@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="pyk.qna.QNAApplication">
+        android:name="pyk.qna.App">
         <activity android:name=".controller.activity.MainActivity"
                   android:theme="@style/AppTheme">
             <intent-filter>
