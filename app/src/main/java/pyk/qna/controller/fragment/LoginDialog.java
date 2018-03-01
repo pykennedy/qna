@@ -1,6 +1,5 @@
 package pyk.qna.controller.fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -16,18 +15,11 @@ import pyk.qna.R;
 import pyk.qna.model.firebase.FirebaseHandler;
 
 public class LoginDialog extends DialogFragment implements View.OnClickListener {
-  FirebaseHandler fb;
   EditText email;
   EditText password;
   TextView button;
   TextView change;
   boolean isCreate;
-  
-  @Override
-  public void onAttach(Activity activity) {
-    super.onAttach(activity);
-    fb = new FirebaseHandler();
-  }
   
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -54,19 +46,7 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
   @Override public void onClick(View view) {
     switch (view.getId()) {
       case R.id.tv_login_confirm:
-        FirebaseHandler fb = new FirebaseHandler();
-        /*
-        TODO:
-          run this on async task
-          on success, insert user record
-          ondatasetchanged check for valid record
-          only then confirm account creation and close dialog
-          
-          on retry, make sure to check if user is already signed in
-            if yes, then retry insert user
-            if no, restart from top
-         */
-        fb.createUser(email.getText().toString(), password.getText().toString());
+        FirebaseHandler.getFb().loginUser(email.getText().toString(), password.getText().toString());
         break;
       case R.id.tv_login_switchToCreate:
         change.setText((isCreate) ? "create an account" : "return to login");
