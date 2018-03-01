@@ -6,9 +6,17 @@
     android:background="@drawable/rounded_dialog">
 
     <View
-        android:id="@+id/login_box"
+        android:id="@+id/login_box_small"
         android:layout_width="match_parent"
         android:layout_height="190dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"/>
+
+    <View
+        android:id="@+id/login_box_big"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"/>
 
@@ -18,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:hint="email"
+        android:text="pykennedy@gmail.com"
         android:inputType="textEmailAddress"
         android:textColor="@color/white_primary"
         android:textColorHint="@color/white_primary_32"
@@ -30,7 +39,21 @@
         android:layout_below="@+id/et_login_email"
         android:layout_centerHorizontal="true"
         android:hint="password"
+        android:text="abcd1234"
         android:inputType="textPassword"
+        android:textColor="@color/white_primary"
+        android:textColorHint="@color/white_primary_32"
+        android:textSize="24sp"/>
+
+    <EditText
+        android:id="@+id/et_login_username"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/et_login_pw"
+        android:visibility="gone"
+        android:hint="username"
+        android:text="appleseed"
         android:textColor="@color/white_primary"
         android:textColorHint="@color/white_primary_32"
         android:textSize="24sp"/>
@@ -39,7 +62,7 @@
         android:id="@+id/tv_login_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/et_login_pw"
+        android:layout_below="@+id/et_login_username"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:background="@drawable/rectangular_border"

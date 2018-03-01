@@ -15,9 +15,10 @@ import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import pyk.qna.R;
 import pyk.qna.controller.fragment.LoginDialog;
+import pyk.qna.model.firebase.FirebaseHandler;
 import pyk.qna.view.adapter.ItemAdapter;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, FirebaseHandler.Delegate{
   FrameLayout frameLayout;
   BlurView    blurViewTop;
   BlurView    blurViewBottom;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView bottomTV = (TextView) findViewById(R.id.lqa);
     bottomTV.setOnClickListener(this);
     
-    
+    FirebaseHandler.getFb().setDelegate(this);
     
     ItemAdapter itemAdapter;
     
@@ -51,17 +52,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   @Override public void onClick(View view) {
     DialogFragment dialogFragment = new LoginDialog();
     dialogFragment.show(getFragmentManager(), "LoginDialog");
-    /*
-    Dialog dialog = new Dialog(this);
-    dialog.setContentView(R.layout.dialog_login);
-    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    dialog.show(); */
   }
   
   private void setupBlurView() {
     final float radius = 25f;
     
-    //set background, if your root layout doesn't have one
     final Drawable windowBackground = getWindow().getDecorView().getBackground();
     background = windowBackground;
     
@@ -75,5 +70,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                   .blurRadius(radius);
   }
   
-
+  
+  @Override public void onLoginSuccess(String successType) {
+  
+  }
+  
+  @Override public void onLoginFailed(String errorType) {
+  
+  }
 }
