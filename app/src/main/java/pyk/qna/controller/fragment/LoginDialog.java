@@ -95,7 +95,7 @@ public class LoginDialog extends DialogFragment implements View.OnClickListener 
     progressBar.setVisibility(View.VISIBLE);
   }
   
-  private void stopSpinning() {
+  public void stopSpinning() {
     email.setVisibility(View.VISIBLE);
     password.setVisibility(View.VISIBLE);
     username.setVisibility((isCreate) ? View.VISIBLE : View.GONE);

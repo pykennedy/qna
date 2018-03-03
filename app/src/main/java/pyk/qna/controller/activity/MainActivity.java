@@ -1,6 +1,5 @@
 package pyk.qna.controller.activity;
 
-import android.app.DialogFragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   BlurView    blurViewTop;
   BlurView    blurViewBottom;
   public static Drawable background;
-  private DialogFragment dialogFragment;
+  private LoginDialog dialogFragment;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -80,5 +79,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   
   @Override public void onLoginFailed(String errorType) {
     Toast.makeText(this, errorType, Toast.LENGTH_SHORT).show();
+    dialogFragment.stopSpinning();
   }
 }
