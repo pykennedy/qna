@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   BlurView    blurViewTop;
   BlurView    blurViewBottom;
   public static Drawable background;
+  private DialogFragment dialogFragment;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   }
   
   @Override public void onClick(View view) {
-    DialogFragment dialogFragment = new LoginDialog();
+    dialogFragment = new LoginDialog();
     dialogFragment.show(getFragmentManager(), "LoginDialog");
   }
   
@@ -72,10 +74,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   
   
   @Override public void onLoginSuccess(String successType) {
-  
+    Toast.makeText(this, successType, Toast.LENGTH_SHORT).show();
+    dialogFragment.dismiss();
   }
   
   @Override public void onLoginFailed(String errorType) {
-  
+    Toast.makeText(this, errorType, Toast.LENGTH_SHORT).show();
   }
 }
