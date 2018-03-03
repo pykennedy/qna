@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context="pyk.qna.MainActivity">
+    tools:context="pyk.qna.controller.activity.MainActivity">
 
     <eightbitlab.com.blurview.BlurView
         android:id="@+id/blurViewTop"
@@ -34,7 +34,7 @@
         app:blurOverlayColor="@color/actionbar_tint">
 
         <TextView
-            android:id="@+id/qa"
+            android:id="@+id/lqa"
             style="@style/bottom_actionbar_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
