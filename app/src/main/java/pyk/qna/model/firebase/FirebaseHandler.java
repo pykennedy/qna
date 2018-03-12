@@ -2,6 +2,7 @@ package pyk.qna.model.firebase;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -14,10 +15,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
+import pyk.qna.App;
 import pyk.qna.controller.Utility;
 import pyk.qna.model.object.User;
-
+// TODO: implement caching to reduce network calls
 public class FirebaseHandler {
   private static final FirebaseAuth      auth            = FirebaseAuth.getInstance();
   private static final DatabaseReference db              =
@@ -32,8 +35,10 @@ public class FirebaseHandler {
   
   public interface Delegate {
     void onLoginSuccess(String successType);
-    
     void onLoginFailed(String errorType);
+    void onReadUserSuccess(User user);
+    void onReadQuestionSuccess(List<String> result);
+    void onReadAnswerSuccess(List<String> result);
   }
   
   private WeakReference<Delegate> delegate;
@@ -109,7 +114,8 @@ public class FirebaseHandler {
                                                                           if (databaseError ==
                                                                               null &&
                                                                               prevPassed()) {
-                                                                            getUsernameFromEmail(email);
+                                                                            getUsernameFromEmail(
+                                                                                email);
                                                                           } else {
                                                                             // if previous or mapping failed, tell user to try again
                                                                             getDelegate()
@@ -117,7 +123,9 @@ public class FirebaseHandler {
                                                                                     "Account creation failed. Try again.");
                                                                             // delete previous progress for consistency
                                                                             if (prevPassed()) {
-                                                                              db.child("user/" + username).removeValue();
+                                                                              db.child("user/" +
+                                                                                       username)
+                                                                                .removeValue();
                                                                             }
                                                                           }
                                                                         }
@@ -128,7 +136,18 @@ public class FirebaseHandler {
     });
   }
   
-  public void writeUser(User user) {}
+  public void writeUser(User user) {
+    db.child("user/" + user.getUsername()).setValue(user, new DatabaseReference.CompletionListener() {
+      @Override
+      public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+        if(databaseError == null) {
+          Toast.makeText(App.get(), "Updates saved successfully", Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(App.get(), "Failed to save updates", Toast.LENGTH_SHORT).show();
+        }
+      }
+    });
+  }
   
   public void writeQuestion()      {}
   
@@ -144,7 +163,6 @@ public class FirebaseHandler {
             } catch (NullPointerException e) {
               setLoggedInUser(null);
             }
-          } else {
           }
         }
       }
@@ -175,7 +193,22 @@ public class FirebaseHandler {
     }
   }
   
-  public User readUser(String username) {return new User();}
+  public void readUser(final String username) {
+    db.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
+      @Override public void onDataChange(DataSnapshot dataSnapshot) {
+        for(DataSnapshot child : dataSnapshot.getChildren()) {
+          if(child.getKey().equals(username)) {
+            User user = child.getValue(User.class);
+            getDelegate().onReadUserSuccess(user);
+          }
+        }
+      }
+  
+      @Override public void onCancelled(DatabaseError databaseError) {
+    
+      }
+    });
+  }
   
   public void readQuestion()            {}
   
