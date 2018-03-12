@@ -17,16 +17,23 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-            <com.github.pavlospt.CircleView
-                android:id="@+id/imgback_list"
-                style="@style/list_item_photo_background"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/list_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/emptyimage"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="2dp"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/photo_frame"/>
 
             <TextView
                 android:id="@+id/question_list"
                 style="@style/list_item_qa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/imgback_list"/>
+                android:layout_toEndOf="@+id/list_image"/>
 
             <TextView
                 android:id="@+id/username_list"
@@ -34,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/question_list"
-                android:layout_toEndOf="@+id/imgback_list"
+                android:layout_toEndOf="@+id/list_image"
                 android:text="worldsmostinterestingman"/>
 
             <TextView
@@ -43,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/username_list"
-                android:layout_toEndOf="@+id/imgback_list"
+                android:layout_toEndOf="@+id/list_image"
                 android:text="01/01/1980 24:00"/>
 
         </RelativeLayout>
