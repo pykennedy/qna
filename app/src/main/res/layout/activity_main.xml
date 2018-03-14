@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="2dp"
-            android:text="question"/>
+            android:text="log in"/>
     </eightbitlab.com.blurview.BlurView>
 
     <android.support.v7.widget.RecyclerView
