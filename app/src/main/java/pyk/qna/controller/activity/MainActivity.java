@@ -20,6 +20,7 @@ import pyk.qna.R;
 import pyk.qna.controller.Utility;
 import pyk.qna.controller.fragment.EditProfileDialog;
 import pyk.qna.controller.fragment.LoginDialog;
+import pyk.qna.controller.fragment.QuestionDialog;
 import pyk.qna.model.firebase.FirebaseHandler;
 import pyk.qna.model.object.User;
 import pyk.qna.view.adapter.ItemAdapter;
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity
   public static Drawable          background;
   private       LoginDialog       loginDialogFragment;
   private       EditProfileDialog editProfileDialogFragment;
+  private       QuestionDialog    questionDialogFragment;
+  
+  TextView bottomTV;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     CircleImageView image = (CircleImageView) findViewById(R.id.actionbar_image);
     image.setOnClickListener(this);
     
-    TextView bottomTV = (TextView) findViewById(R.id.lqa);
+    bottomTV = (TextView) findViewById(R.id.lqa);
     bottomTV.setOnClickListener(this);
     
     FirebaseHandler.getFb().setDelegate(this);
@@ -65,8 +69,15 @@ public class MainActivity extends AppCompatActivity
   @Override public void onClick(View view) {
     switch (view.getId()) {
       case R.id.lqa:
-        loginDialogFragment = new LoginDialog();
-        loginDialogFragment.show(getFragmentManager(), "LoginDialog");
+        if (bottomTV.getText().toString().equals("log in")) {
+          loginDialogFragment = new LoginDialog();
+          loginDialogFragment.show(getFragmentManager(), "LoginDialog");
+        } else if (bottomTV.getText().toString().equals("question")) {
+          questionDialogFragment = new QuestionDialog();
+          questionDialogFragment.show(getFragmentManager(), "QuestionDialog");
+        } else if (bottomTV.getText().toString().equals("answer")) {
+        
+        }
         break;
       case R.id.actionbar_image:
         Utility.handlePermission(this);
@@ -99,6 +110,7 @@ public class MainActivity extends AppCompatActivity
   @Override public void onLoginSuccess(String successType) {
     Toast.makeText(this, successType, Toast.LENGTH_SHORT).show();
     loginDialogFragment.dismiss();
+    bottomTV.setText("question");
   }
   
   @Override public void onLoginFailed(String errorType) {

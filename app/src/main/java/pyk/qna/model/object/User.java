@@ -7,8 +7,6 @@ public class User {
   private String       username;
   private String       photo;
   private String       description;
-  private long         numberOfQ;
-  private long         numberOfA;
   private List<String> questions;
   private List<String> answers;
   
@@ -18,47 +16,45 @@ public class User {
     this.username = username;
     this.photo = null;
     this.description = null;
-    this.numberOfQ = 0;
-    this.numberOfA = 0;
     this.questions = new ArrayList<String>();
     this.answers = new ArrayList<String>();
   }
   
-  public User(String username, String photo, String description, long numberOfQ,
-              long numberOfA, List<String> questions, List<String> answers) {
+  public User(String username, String photo, String description, List<String> questions,
+              List<String> answers) {
     this.username = username;
     this.photo = photo;
     this.description = description;
-    this.numberOfQ = numberOfQ;
-    this.numberOfA = numberOfA;
     this.questions = questions;
     this.answers = answers;
   }
   
-  public String getUsername()                      { return username; }
+  public String getUsername()                    { return username; }
   
-  public String getPhoto()                         { return photo; }
+  public String getPhoto()                       { return photo; }
   
-  public String getDescription()                   { return description; }
+  public String getDescription()                 { return description; }
   
-  public long getNumberOfQ()                       { return numberOfQ; }
+  public List<String> getQuestions()             { return questions; }
   
-  public long getNumberOfA()                       { return numberOfA; }
+  public List<String> getAnswers()               { return answers; }
   
-  public List<String> getQuestions()               { return questions; }
+  public void setPhoto(String photo)             { this.photo = photo; }
   
-  public List<String> getAnswers()                 { return answers; }
+  public void setDescription(String description) { this.description = description; }
   
-  public void setPhoto(String photo)               { this.photo = photo; }
+  public void addQuestion(String questionID)     {
+    if(questions == null) {
+      questions = new ArrayList<String>();
+    }
+    questions.add(questionID);
+  }
   
-  public void setDescription(String description)   { this.description = description; }
-  
-  public void setNumberOfQ(long numberOfQ)         { this.numberOfQ = numberOfQ; }
-  
-  public void setNumberOfA(long numberOfA)         { this.numberOfA = numberOfA; }
-  
-  public void setQuestions(List<String> questions) { this.questions = questions; }
-  
-  public void setAnswers(List<String> answers)     { this.answers = answers; }
+  public void addAnswer(String answerID)         {
+    if(answers == null) {
+      answers = new ArrayList<String>();
+    }
+    answers.add(answerID);
+  }
   
 }

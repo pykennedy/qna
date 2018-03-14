@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/rounded_dialog">
 
-</android.support.constraint.ConstraintLayout>
+    <View
+        android:id="@+id/question_box"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"/>
+
+    <EditText
+        android:id="@+id/et_question"
+        android:layout_width="280dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:hint="ask a question in 240 characters"
+        android:maxLength="240"
+        android:lines="7"
+        android:inputType="textMultiLine"
+        android:textColor="@color/white_primary"
+        android:textColorHint="@color/white_primary_32"
+        android:gravity="top|start"
+        android:imeOptions="actionDone"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tv_ask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_below="@+id/et_question"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:paddingEnd="15dp"
+        android:paddingStart="15dp"
+        android:text="ask"
+        android:textColor="@color/white_primary"
+        android:background="@drawable/rectangular_border"
+        android:textSize="24sp"/>
+
+</RelativeLayout>

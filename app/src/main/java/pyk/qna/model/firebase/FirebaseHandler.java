@@ -19,7 +19,9 @@ import java.util.List;
 
 import pyk.qna.App;
 import pyk.qna.controller.Utility;
+import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
+
 // TODO: implement caching to reduce network calls
 public class FirebaseHandler {
   private static final FirebaseAuth      auth            = FirebaseAuth.getInstance();
@@ -28,6 +30,7 @@ public class FirebaseHandler {
   private static final FirebaseHandler   fb              = new FirebaseHandler();
   private              boolean           chainChecks     = false;
   private              String            currentUsername = null;
+  private              User              currentUser     = null;
   
   public static FirebaseHandler getFb() {
     return fb;
@@ -35,9 +38,13 @@ public class FirebaseHandler {
   
   public interface Delegate {
     void onLoginSuccess(String successType);
+    
     void onLoginFailed(String errorType);
+    
     void onReadUserSuccess(User user);
+    
     void onReadQuestionSuccess(List<String> result);
+    
     void onReadAnswerSuccess(List<String> result);
   }
   
@@ -89,47 +96,38 @@ public class FirebaseHandler {
           }
         }
         User user = new User(username);
-        db.child("user").child(user.getUsername()).setValue(user,
-                                                            new DatabaseReference.CompletionListener() {
-                                                              @Override
-                                                              public void onComplete(
-                                                                  DatabaseError databaseError,
-                                                                  DatabaseReference databaseReference) {
-                                                                // if add user record passed, then then track progress
-                                                                if (databaseError == null) {
-                                                                  setPrevPassed(true);
-                                                                  // if add user failed, then fail next check even if successful
-                                                                } else {
-                                                                  setPrevPassed(false);
-                                                                }
-                                                              }
-                                                            });
-        db.child("account").child(Utility.cleanEmail(email)).setValue(username,
-                                                                      new DatabaseReference.CompletionListener() {
-                                                                        @Override
-                                                                        public void onComplete(
-                                                                            DatabaseError databaseError,
-                                                                            DatabaseReference databaseReference) {
-                                                                          // if add email to username mapping passed and previous passed, then inform user of successful creation
-                                                                          if (databaseError ==
-                                                                              null &&
-                                                                              prevPassed()) {
-                                                                            getUsernameFromEmail(
-                                                                                email);
-                                                                          } else {
-                                                                            // if previous or mapping failed, tell user to try again
-                                                                            getDelegate()
-                                                                                .onLoginFailed(
-                                                                                    "Account creation failed. Try again.");
-                                                                            // delete previous progress for consistency
-                                                                            if (prevPassed()) {
-                                                                              db.child("user/" +
-                                                                                       username)
-                                                                                .removeValue();
-                                                                            }
-                                                                          }
-                                                                        }
-                                                                      });
+        db.child("user").child(user.getUsername())
+          .setValue(user, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError,
+                                   DatabaseReference databaseReference) {
+              // if add user record passed, then then track progress
+              if (databaseError == null) {
+                setPrevPassed(true);
+                // if add user failed, then fail next check even if successful
+              } else {
+                setPrevPassed(false);
+              }
+            }
+          });
+        db.child("account").child(Utility.cleanEmail(email))
+          .setValue(username, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError,
+                                   DatabaseReference databaseReference) {
+              // if add email to username mapping passed and previous passed, then inform user of successful creation
+              if (databaseError == null && prevPassed()) {
+                getUsernameFromEmail(email);
+              } else {
+                // if previous or mapping failed, tell user to try again
+                getDelegate().onLoginFailed("Account creation failed. Try again.");
+                // delete previous progress for consistency
+                if (prevPassed()) {
+                  db.child("user/" + username).removeValue();
+                }
+              }
+            }
+          });
       }
       
       @Override public void onCancelled(DatabaseError databaseError) {}
@@ -137,21 +135,53 @@ public class FirebaseHandler {
   }
   
   public void writeUser(User user) {
-    db.child("user/" + user.getUsername()).setValue(user, new DatabaseReference.CompletionListener() {
-      @Override
-      public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-        if(databaseError == null) {
-          Toast.makeText(App.get(), "Updates saved successfully", Toast.LENGTH_SHORT).show();
-        } else {
-          Toast.makeText(App.get(), "Failed to save updates", Toast.LENGTH_SHORT).show();
+    db.child("user/" + user.getUsername())
+      .setValue(user, new DatabaseReference.CompletionListener() {
+        @Override
+        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+          if (databaseError == null) {
+            Toast.makeText(App.get(), "Updates saved successfully", Toast.LENGTH_SHORT).show();
+          } else {
+            Toast.makeText(App.get(), "Failed to save updates", Toast.LENGTH_SHORT).show();
+          }
         }
-      }
-    });
+      });
   }
   
-  public void writeQuestion()      {}
+  public void writeQuestion(String questionText, boolean isNew) {
+    setPrevPassed(false);
+    if (isNew) {
+      Question question = new Question(questionText);
+      final String questionID = question.getUsername() + question.getPostTime();
+      currentUser.addQuestion(questionID);
+      db.child("question/" + questionID)
+        .setValue(question, new DatabaseReference.CompletionListener() {
+          @Override
+          public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+            if (databaseError == null) {
+              setPrevPassed(true);
+            } else {
+              setPrevPassed(false);
+            }
+          }
+        });
+      db.child("user/" + currentUsername)
+        .setValue(currentUser, new DatabaseReference.CompletionListener() {
+          @Override
+          public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+            if (databaseError == null) {
+              Toast.makeText(App.get(), "Question asked successfully", Toast.LENGTH_SHORT).show();
+            } else {
+              Toast.makeText(App.get(), "Failed to ask question", Toast.LENGTH_SHORT).show();
+              db.child("question/" + questionID).removeValue();
+              currentUser.getQuestions().remove(questionID);
+            }
+          }
+        });
+    }
+  }
   
-  public void writeAnswer()        {}
+  public void writeAnswer() {}
   
   private void getUsernameFromEmail(final String email) {
     db.child("account").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -159,9 +189,9 @@ public class FirebaseHandler {
         for (DataSnapshot child : dataSnapshot.getChildren()) {
           if (child.getKey().equals(Utility.cleanEmail(email))) {
             try {
-              setLoggedInUser(child.getValue().toString());
+              readUser(child.getValue().toString());
             } catch (NullPointerException e) {
-              setLoggedInUser(null);
+              Toast.makeText(App.get(), "Failure, try again", Toast.LENGTH_SHORT).show();
             }
           }
         }
@@ -196,23 +226,23 @@ public class FirebaseHandler {
   public void readUser(final String username) {
     db.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
       @Override public void onDataChange(DataSnapshot dataSnapshot) {
-        for(DataSnapshot child : dataSnapshot.getChildren()) {
-          if(child.getKey().equals(username)) {
+        for (DataSnapshot child : dataSnapshot.getChildren()) {
+          if (child.getKey().equals(username)) {
             User user = child.getValue(User.class);
-            getDelegate().onReadUserSuccess(user);
+            setCurrentUser(user);
           }
         }
       }
-  
+      
       @Override public void onCancelled(DatabaseError databaseError) {
-    
+      
       }
     });
   }
   
-  public void readQuestion()            {}
+  public void readQuestion() {}
   
-  public void readAnswer()              {}
+  public void readAnswer()   {}
   
   private boolean prevPassed() {
     return chainChecks;
@@ -226,10 +256,15 @@ public class FirebaseHandler {
     return currentUsername;
   }
   
-  private void setLoggedInUser(String username) {
-    currentUsername = username;
-    if (currentUsername != null) {
+  public User getCurrentUser() { return currentUser; }
+  
+  private void setCurrentUser(User user) {
+    this.currentUser = user;
+    this.currentUsername = user.getUsername();
+    if(currentUsername != null) {
       getDelegate().onLoginSuccess("Logged in as " + currentUsername);
+    } else {
+      getDelegate().onLoginFailed("Failed to log in");
     }
   }
 }
