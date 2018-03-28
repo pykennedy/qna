@@ -22,6 +22,7 @@ import pyk.qna.controller.fragment.EditProfileDialog;
 import pyk.qna.controller.fragment.LoginDialog;
 import pyk.qna.controller.fragment.QuestionDialog;
 import pyk.qna.model.firebase.FirebaseHandler;
+import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
 import pyk.qna.view.adapter.ItemAdapter;
 
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity
     Toast.makeText(this, successType, Toast.LENGTH_SHORT).show();
     loginDialogFragment.dismiss();
     bottomTV.setText("question");
+    FirebaseHandler.getFb().readAllQuestions();
   }
   
   @Override public void onLoginFailed(String errorType) {
@@ -118,9 +120,9 @@ public class MainActivity extends AppCompatActivity
     loginDialogFragment.stopSpinning();
   }
   
-  @Override public void onReadUserSuccess(User user)               {}
+  @Override public void onReadUserSuccess(User user)                             {}
   
-  @Override public void onReadQuestionSuccess(List<String> result) {}
+  @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
   
-  @Override public void onReadAnswerSuccess(List<String> result)   {}
+  @Override public void onReadAnswerSuccess(List<String> result)                 {}
 }

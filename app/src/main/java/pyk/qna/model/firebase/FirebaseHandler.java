@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,7 +44,7 @@ public class FirebaseHandler {
     
     void onReadUserSuccess(User user);
     
-    void onReadQuestionSuccess(List<String> result);
+    void onReadQuestionSuccess(Question question, boolean isList);
     
     void onReadAnswerSuccess(List<String> result);
   }
@@ -151,7 +152,7 @@ public class FirebaseHandler {
   public void writeQuestion(String questionText, boolean isNew) {
     setPrevPassed(false);
     if (isNew) {
-      Question question = new Question(questionText);
+      Question     question   = new Question(questionText);
       final String questionID = question.getUsername() + question.getPostTime();
       currentUser.addQuestion(questionID);
       db.child("question/" + questionID)
@@ -240,6 +241,28 @@ public class FirebaseHandler {
     });
   }
   
+  public List<Question> readAllQuestions() {
+    db.child("question").addChildEventListener(new ChildEventListener() {
+      @Override public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        Question question = dataSnapshot.getValue(Question.class);
+        getDelegate().onReadQuestionSuccess(question, true);
+      }
+      
+      @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        Question question = dataSnapshot.getValue(Question.class);
+        getDelegate().onReadQuestionSuccess(question, true);
+      }
+      
+      @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+      
+      @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+      
+      @Override public void onCancelled(DatabaseError databaseError) {}
+    });
+    
+    return null;
+  }
+  
   public void readQuestion() {}
   
   public void readAnswer()   {}
@@ -261,7 +284,7 @@ public class FirebaseHandler {
   private void setCurrentUser(User user) {
     this.currentUser = user;
     this.currentUsername = user.getUsername();
-    if(currentUsername != null) {
+    if (currentUsername != null) {
       getDelegate().onLoginSuccess("Logged in as " + currentUsername);
     } else {
       getDelegate().onLoginFailed("Failed to log in");

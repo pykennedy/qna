@@ -15,8 +15,12 @@ import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import pyk.qna.R;
 import pyk.qna.controller.activity.MainActivity;
+import pyk.qna.model.firebase.FirebaseHandler;
+import pyk.qna.model.object.Question;
+import pyk.qna.model.object.User;
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder> {
+public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder>
+    implements FirebaseHandler.Delegate {
   
   private List<String> poiItemList = null;
   Context     context;
@@ -38,30 +42,28 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
     View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.poi_item, viewGroup,
                                                                        false);
     
-    
     return new ItemAdapterViewHolder(inflate, frameLayout);
   }
   
   @Override
   public void onBindViewHolder(ItemAdapterViewHolder itemAdapterViewHolder, int index) {
-    itemAdapterViewHolder.update("Why did the chicken cross the road? Like really why tho... smh");
+    itemAdapterViewHolder.update(poiItemList.get(index));
   }
   
   @Override
   public int getItemCount() {
-    int i = (poiItemList == null) ? 0 : poiItemList.size();
-    
-    return i;
+    return (poiItemList == null) ? 0 : poiItemList.size();
   }
   
-  public void setAll() {
-    List<String> s = new ArrayList<String>();
-    for (int i = 0; i < 20; i++) {
-      s.add("Why did the chicken cross the road? Like really why tho... smh");
-    }
-    poiItemList = s;
-    notifyDataSetChanged();
-  }
+  @Override public void onLoginSuccess(String successType) {}
+  
+  @Override public void onLoginFailed(String errorType) {}
+  
+  @Override public void onReadUserSuccess(User user) {}
+  
+  @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
+  
+  @Override public void onReadAnswerSuccess(List<String> result) {}
   
   
   class ItemAdapterViewHolder extends RecyclerView.ViewHolder {
