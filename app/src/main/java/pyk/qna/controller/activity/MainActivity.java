@@ -60,9 +60,10 @@ public class MainActivity extends AppCompatActivity
     
     itemAdapter = new ItemAdapter(this, frameLayout);
     RecyclerView recyclerView = (RecyclerView) this.findViewById(R.id.rv_list);
+    recyclerView.setAdapter(itemAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.setItemAnimator(new DefaultItemAnimator());
-    recyclerView.setAdapter(itemAdapter);
+    
     
     setupBlurView();
   }
