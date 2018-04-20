@@ -82,9 +82,14 @@ public class MainActivity extends AppCompatActivity
         }
         break;
       case R.id.actionbar_image:
-        Utility.handlePermission(this);
-        editProfileDialogFragment = new EditProfileDialog();
-        editProfileDialogFragment.show(getFragmentManager(), "EditProfileDialog");
+        if(FirebaseHandler.getFb().getCurrentUsername() != null) {
+          Utility.handlePermission(this);
+          editProfileDialogFragment = new EditProfileDialog();
+          editProfileDialogFragment.show(getFragmentManager(), "EditProfileDialog");
+        } else {
+          loginDialogFragment = new LoginDialog();
+          loginDialogFragment.show(getFragmentManager(), "LoginDialog");
+        }
         break;
       default:
         break;

@@ -230,7 +230,11 @@ public class FirebaseHandler {
         for (DataSnapshot child : dataSnapshot.getChildren()) {
           if (child.getKey().equals(username)) {
             User user = child.getValue(User.class);
-            setCurrentUser(user);
+            if(currentUsername == null) {
+              setCurrentUser(user);
+            } else {
+              getDelegate().onReadUserSuccess(user);
+            }
           }
         }
       }
