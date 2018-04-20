@@ -11,6 +11,8 @@ public class Question {
   private String postTime;
   private List<String> answers;
   
+  public Question() {}
+  
   public Question(String questionText) {
     this.username = FirebaseHandler.getFb().getCurrentUsername();
     this.questionText = questionText;

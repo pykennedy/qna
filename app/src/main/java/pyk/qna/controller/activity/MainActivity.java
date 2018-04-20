@@ -22,6 +22,7 @@ import pyk.qna.controller.fragment.EditProfileDialog;
 import pyk.qna.controller.fragment.LoginDialog;
 import pyk.qna.controller.fragment.QuestionDialog;
 import pyk.qna.model.firebase.FirebaseHandler;
+import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
 import pyk.qna.view.adapter.ItemAdapter;
 
@@ -59,9 +60,10 @@ public class MainActivity extends AppCompatActivity
     
     itemAdapter = new ItemAdapter(this, frameLayout);
     RecyclerView recyclerView = (RecyclerView) this.findViewById(R.id.rv_list);
+    recyclerView.setAdapter(itemAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     recyclerView.setItemAnimator(new DefaultItemAnimator());
-    recyclerView.setAdapter(itemAdapter);
+    
     
     setupBlurView();
   }
@@ -80,9 +82,14 @@ public class MainActivity extends AppCompatActivity
         }
         break;
       case R.id.actionbar_image:
-        Utility.handlePermission(this);
-        editProfileDialogFragment = new EditProfileDialog();
-        editProfileDialogFragment.show(getFragmentManager(), "EditProfileDialog");
+        if(FirebaseHandler.getFb().getCurrentUsername() != null) {
+          Utility.handlePermission(this);
+          editProfileDialogFragment = new EditProfileDialog();
+          editProfileDialogFragment.show(getFragmentManager(), "EditProfileDialog");
+        } else {
+          loginDialogFragment = new LoginDialog();
+          loginDialogFragment.show(getFragmentManager(), "LoginDialog");
+        }
         break;
       default:
         break;
@@ -111,6 +118,7 @@ public class MainActivity extends AppCompatActivity
     Toast.makeText(this, successType, Toast.LENGTH_SHORT).show();
     loginDialogFragment.dismiss();
     bottomTV.setText("question");
+    FirebaseHandler.getFb().readAllQuestions();
   }
   
   @Override public void onLoginFailed(String errorType) {
@@ -118,9 +126,9 @@ public class MainActivity extends AppCompatActivity
     loginDialogFragment.stopSpinning();
   }
   
-  @Override public void onReadUserSuccess(User user)               {}
+  @Override public void onReadUserSuccess(User user)                             {}
   
-  @Override public void onReadQuestionSuccess(List<String> result) {}
+  @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
   
-  @Override public void onReadAnswerSuccess(List<String> result)   {}
+  @Override public void onReadAnswerSuccess(List<String> result)                 {}
 }

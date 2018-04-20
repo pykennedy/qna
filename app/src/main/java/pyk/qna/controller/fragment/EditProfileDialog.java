@@ -29,6 +29,7 @@ import pyk.qna.App;
 import pyk.qna.R;
 import pyk.qna.controller.Utility;
 import pyk.qna.model.firebase.FirebaseHandler;
+import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
 
 import static android.app.Activity.RESULT_OK;
@@ -133,7 +134,7 @@ public class EditProfileDialog extends DialogFragment
     description.setText(user.getDescription());
   }
   
-  @Override public void onReadQuestionSuccess(List<String> result) {}
+  @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
   
-  @Override public void onReadAnswerSuccess(List<String> result)   {}
+  @Override public void onReadAnswerSuccess(List<String> result)                 {}
 }
