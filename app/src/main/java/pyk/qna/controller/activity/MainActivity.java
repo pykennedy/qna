@@ -2,10 +2,11 @@ package pyk.qna.controller.activity;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -18,15 +19,15 @@ import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import pyk.qna.R;
 import pyk.qna.controller.Utility;
-import pyk.qna.controller.fragment.EditProfileDialog;
-import pyk.qna.controller.fragment.LoginDialog;
-import pyk.qna.controller.fragment.QuestionDialog;
+import pyk.qna.controller.fragment.HomeFragment;
+import pyk.qna.controller.fragment.dialog.EditProfileDialog;
+import pyk.qna.controller.fragment.dialog.LoginDialog;
+import pyk.qna.controller.fragment.dialog.QuestionDialog;
 import pyk.qna.model.firebase.FirebaseHandler;
 import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
-import pyk.qna.view.adapter.ItemAdapter;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends FragmentActivity
     implements View.OnClickListener, FirebaseHandler.Delegate {
   FrameLayout frameLayout;
   BlurView    blurViewTop;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity
   private       LoginDialog       loginDialogFragment;
   private       EditProfileDialog editProfileDialogFragment;
   private       QuestionDialog    questionDialogFragment;
+  private       ViewPager         pager;
+  private       PagerAdapter      pagerAdapter;
   
   TextView bottomTV;
   
@@ -56,14 +59,9 @@ public class MainActivity extends AppCompatActivity
     
     FirebaseHandler.getFb().setDelegate(this);
     
-    ItemAdapter itemAdapter;
-    
-    itemAdapter = new ItemAdapter(this, frameLayout);
-    RecyclerView recyclerView = (RecyclerView) this.findViewById(R.id.rv_list);
-    recyclerView.setAdapter(itemAdapter);
-    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    recyclerView.setItemAnimator(new DefaultItemAnimator());
-    
+    pager = (ViewPager) findViewById(R.id.vp_activity);
+    pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+    pager.setAdapter(pagerAdapter);
     
     setupBlurView();
   }
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         }
         break;
       case R.id.actionbar_image:
-        if(FirebaseHandler.getFb().getCurrentUsername() != null) {
+        if (FirebaseHandler.getFb().getCurrentUsername() != null) {
           Utility.handlePermission(this);
           editProfileDialogFragment = new EditProfileDialog();
           editProfileDialogFragment.show(getFragmentManager(), "EditProfileDialog");
@@ -113,7 +111,6 @@ public class MainActivity extends AppCompatActivity
                   .blurRadius(radius);
   }
   
-  
   @Override public void onLoginSuccess(String successType) {
     Toast.makeText(this, successType, Toast.LENGTH_SHORT).show();
     loginDialogFragment.dismiss();
@@ -131,4 +128,22 @@ public class MainActivity extends AppCompatActivity
   @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
   
   @Override public void onReadAnswerSuccess(List<String> result)                 {}
+  
+  private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+    public ScreenSlidePagerAdapter(FragmentManager fm) {
+      super(fm);
+    }
+    
+    @Override
+    public android.support.v4.app.Fragment getItem(int position) {
+      //TODO: switch to decide between home/question fragment
+      return new HomeFragment();
+    }
+    
+    @Override
+    public int getCount() {
+      return 2;
+    }
+  }
+  
 }
