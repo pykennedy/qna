@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurItemViewQuestion"
+        style="@style/list_item_tint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="15dp"
+                        android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_question_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="defaultQuestion"
+                android:textColor="@color/white_primary"
+                android:textSize="24sp"/>
+
+        </RelativeLayout>
+
+    </eightbitlab.com.blurview.BlurView>
+</FrameLayout>

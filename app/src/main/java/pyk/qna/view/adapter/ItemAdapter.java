@@ -25,10 +25,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
   private List<Question> questions = new ArrayList<Question>();
   Context     context;
   FrameLayout frameLayout;
+  final MainActivity mainActivity;
   
-  public ItemAdapter(Context context, FrameLayout frameLayout) {
+  public ItemAdapter(Context context, FrameLayout frameLayout, MainActivity mainActivity) {
     this.context = context;
     this.frameLayout = frameLayout;
+    this.mainActivity = mainActivity;
     
     FirebaseHandler fb = new FirebaseHandler();
     fb.setDelegate(this);
@@ -78,13 +80,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
   
   class ItemAdapterViewHolder extends RecyclerView.ViewHolder {
     TextView title;
+    TextView username;
+    TextView postTime;
     BlurView blurView;
     
     public ItemAdapterViewHolder(View itemView, FrameLayout frameLayout) {
       super(itemView);
       title = (TextView) itemView.findViewById(R.id.question_list);
-      
-      title.setClipToOutline(true);
+      username = (TextView) itemView.findViewById(R.id.username_list);
+      postTime = (TextView) itemView.findViewById(R.id.datetime_list);
       
       blurView = itemView.findViewById(R.id.blurItemView);
       
@@ -93,10 +97,18 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
               .blurAlgorithm(new RenderScriptBlur(context))
               .blurRadius(25f);
       blurView.setClipToOutline(true);
+      
+      itemView.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          mainActivity.switchToQuestion();
+        }
+      });
     }
     
     void update(Question q) {
       title.setText(q.getQuestionText());
+      username.setText(q.getUsername());
+      postTime.setText(q.getPostTime());
     }
     
   }

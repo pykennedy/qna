@@ -20,6 +20,7 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 import pyk.qna.R;
 import pyk.qna.controller.Utility;
 import pyk.qna.controller.fragment.HomeFragment;
+import pyk.qna.controller.fragment.QuestionFragment;
 import pyk.qna.controller.fragment.dialog.EditProfileDialog;
 import pyk.qna.controller.fragment.dialog.LoginDialog;
 import pyk.qna.controller.fragment.dialog.QuestionDialog;
@@ -34,6 +35,7 @@ public class MainActivity extends FragmentActivity
   BlurView    blurViewBottom;
   
   public static Drawable          background;
+  public static FrameLayout       sFrameLayout;
   private       LoginDialog       loginDialogFragment;
   private       EditProfileDialog editProfileDialogFragment;
   private       QuestionDialog    questionDialogFragment;
@@ -48,6 +50,7 @@ public class MainActivity extends FragmentActivity
     setContentView(R.layout.activity_main);
     
     frameLayout = (FrameLayout) findViewById(R.id.root);
+    sFrameLayout = frameLayout;
     blurViewTop = (BlurView) findViewById(R.id.blurViewTop);
     blurViewBottom = (BlurView) findViewById(R.id.blurViewBottom);
     
@@ -92,7 +95,10 @@ public class MainActivity extends FragmentActivity
       default:
         break;
     }
-    
+  }
+  
+  public void switchToQuestion() {
+    pager.setCurrentItem(1);
   }
   
   private void setupBlurView() {
@@ -136,8 +142,14 @@ public class MainActivity extends FragmentActivity
     
     @Override
     public android.support.v4.app.Fragment getItem(int position) {
-      //TODO: switch to decide between home/question fragment
-      return new HomeFragment();
+      switch (position) {
+        case 0:
+          return new HomeFragment();
+        case 1:
+          return new QuestionFragment();
+        default:
+          return new HomeFragment();
+      }
     }
     
     @Override

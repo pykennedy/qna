@@ -8,7 +8,7 @@
         android:id="@+id/rv_question_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="2dp"
+        android:paddingBottom="2dp"
         android:paddingEnd="5dp"
         android:paddingStart="5dp"/>
 
