@@ -19,7 +19,7 @@ import pyk.qna.model.firebase.FirebaseHandler;
 import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterViewHolder>
+public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.ItemAdapterViewHolder>
     implements FirebaseHandler.Delegate {
   
   private List<Question> questions = new ArrayList<Question>();
@@ -27,7 +27,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
   FrameLayout frameLayout;
   final MainActivity mainActivity;
   
-  public ItemAdapter(Context context, FrameLayout frameLayout, MainActivity mainActivity) {
+  public QListItemAdapter(Context context, FrameLayout frameLayout, MainActivity mainActivity) {
     this.context = context;
     this.frameLayout = frameLayout;
     this.mainActivity = mainActivity;
@@ -46,7 +46,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
   
   @Override
   public void onBindViewHolder(ItemAdapterViewHolder itemAdapterViewHolder, int index) {
-    itemAdapterViewHolder.update(questions.get((getItemCount()-1) - index));
+    itemAdapterViewHolder.update(questions.get((getItemCount() - 1) - index));
   }
   
   @Override
@@ -100,7 +100,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemAdapterVie
       
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
-          mainActivity.switchToQuestion();
+          mainActivity.switchToQuestion(title.getText().toString(), username.getText().toString() +
+                                                                    postTime.getText().toString());
+          
         }
       });
     }

@@ -33,6 +33,8 @@ public class MainActivity extends FragmentActivity
   FrameLayout frameLayout;
   BlurView    blurViewTop;
   BlurView    blurViewBottom;
+  TextView bottomTV;
+  QuestionFragment questionFragment;
   
   public static Drawable          background;
   public static FrameLayout       sFrameLayout;
@@ -42,7 +44,7 @@ public class MainActivity extends FragmentActivity
   private       ViewPager         pager;
   private       PagerAdapter      pagerAdapter;
   
-  TextView bottomTV;
+  private Bundle bundle;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +99,8 @@ public class MainActivity extends FragmentActivity
     }
   }
   
-  public void switchToQuestion() {
+  public void switchToQuestion(String questionText, String questionID) {
+    questionFragment.updateQuestion(questionText, questionID);
     pager.setCurrentItem(1);
   }
   
@@ -146,7 +149,9 @@ public class MainActivity extends FragmentActivity
         case 0:
           return new HomeFragment();
         case 1:
-          return new QuestionFragment();
+          questionFragment = new QuestionFragment();
+          questionFragment.setArguments(bundle);
+          return questionFragment;
         default:
           return new HomeFragment();
       }

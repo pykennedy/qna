@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 
 import pyk.qna.R;
 import pyk.qna.controller.activity.MainActivity;
-import pyk.qna.view.adapter.ItemAdapter;
+import pyk.qna.view.adapter.QListItemAdapter;
 
 public class HomeFragment extends Fragment {
   
@@ -22,8 +22,8 @@ public class HomeFragment extends Fragment {
     ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
     RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_home_list);
   
-    FrameLayout frameLayout = (FrameLayout) getActivity().findViewById(R.id.root);
-    ItemAdapter itemAdapter = new ItemAdapter(getActivity(), frameLayout, ((MainActivity)getActivity()));
+    FrameLayout      frameLayout = (FrameLayout) getActivity().findViewById(R.id.root);
+    QListItemAdapter itemAdapter = new QListItemAdapter(getActivity(), frameLayout, ((MainActivity)getActivity()));
     recyclerView.setAdapter(itemAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setItemAnimator(new DefaultItemAnimator());
