@@ -101,10 +101,21 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
           mainActivity.switchToQuestion(title.getText().toString(), username.getText().toString() +
-                                                                    postTime.getText().toString());
+                                                                    postTime.getText().toString(),
+                                        getQuestion(username.getText().toString() +
+                                                    postTime.getText().toString()));
           
         }
       });
+    }
+    
+    private Question getQuestion(String questionID) {
+      for (Question question : questions) {
+        if ((question.getUsername() + question.getPostTime()).equals(questionID)) {
+          return question;
+        }
+      }
+      return null;
     }
     
     void update(Question q) {

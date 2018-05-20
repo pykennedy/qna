@@ -21,6 +21,7 @@ import pyk.qna.R;
 import pyk.qna.controller.Utility;
 import pyk.qna.controller.fragment.HomeFragment;
 import pyk.qna.controller.fragment.QuestionFragment;
+import pyk.qna.controller.fragment.dialog.AnswerDialog;
 import pyk.qna.controller.fragment.dialog.EditProfileDialog;
 import pyk.qna.controller.fragment.dialog.LoginDialog;
 import pyk.qna.controller.fragment.dialog.QuestionDialog;
@@ -30,21 +31,22 @@ import pyk.qna.model.object.User;
 
 public class MainActivity extends FragmentActivity
     implements View.OnClickListener, FirebaseHandler.Delegate {
-  FrameLayout frameLayout;
-  BlurView    blurViewTop;
-  BlurView    blurViewBottom;
-  TextView bottomTV;
+  FrameLayout      frameLayout;
+  BlurView         blurViewTop;
+  BlurView         blurViewBottom;
+  TextView         bottomTV;
   QuestionFragment questionFragment;
+  Question currentQuestion;
   
   public static Drawable          background;
   public static FrameLayout       sFrameLayout;
   private       LoginDialog       loginDialogFragment;
   private       EditProfileDialog editProfileDialogFragment;
   private       QuestionDialog    questionDialogFragment;
+  private       AnswerDialog      answerDialogFragment;
   private       ViewPager         pager;
   private       PagerAdapter      pagerAdapter;
-  
-  private Bundle bundle;
+  private       String            currentQuestionID;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +83,9 @@ public class MainActivity extends FragmentActivity
           questionDialogFragment = new QuestionDialog();
           questionDialogFragment.show(getFragmentManager(), "QuestionDialog");
         } else if (bottomTV.getText().toString().equals("answer")) {
-        
+          answerDialogFragment = new AnswerDialog();
+          answerDialogFragment.setQuestion(currentQuestionID, currentQuestion);
+          answerDialogFragment.show(getFragmentManager(), "AnswerDialog");
         }
         break;
       case R.id.actionbar_image:
@@ -99,9 +103,12 @@ public class MainActivity extends FragmentActivity
     }
   }
   
-  public void switchToQuestion(String questionText, String questionID) {
+  public void switchToQuestion(String questionText, String questionID, Question question) {
     questionFragment.updateQuestion(questionText, questionID);
+    currentQuestionID = questionID;
+    currentQuestion = question;
     pager.setCurrentItem(1);
+    bottomTV.setText("answer");
   }
   
   private void setupBlurView() {
@@ -150,7 +157,6 @@ public class MainActivity extends FragmentActivity
           return new HomeFragment();
         case 1:
           questionFragment = new QuestionFragment();
-          questionFragment.setArguments(bundle);
           return questionFragment;
         default:
           return new HomeFragment();
