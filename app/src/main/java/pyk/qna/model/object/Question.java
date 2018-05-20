@@ -17,10 +17,13 @@ public class Question {
     this.username = FirebaseHandler.getFb().getCurrentUsername();
     this.questionText = questionText;
     this.postTime = (String) android.text.format.DateFormat.format("yyyy-MM-dd HH:mm:ss", new java.util.Date());
-    answers = new ArrayList<String>();
+    this.answers = new ArrayList<String>();
   }
   
   public void setAnswer(String answerID) {
+    if (answers == null) {
+      answers = new ArrayList<String>();
+    }
     answers.add(answerID);
   }
   

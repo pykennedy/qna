@@ -1,4 +1,4 @@
-package pyk.qna.controller.fragment;
+package pyk.qna.controller.fragment.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

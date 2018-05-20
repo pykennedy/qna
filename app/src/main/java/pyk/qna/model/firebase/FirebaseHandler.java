@@ -20,6 +20,7 @@ import java.util.List;
 
 import pyk.qna.App;
 import pyk.qna.controller.Utility;
+import pyk.qna.model.object.Answer;
 import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
 
@@ -182,7 +183,52 @@ public class FirebaseHandler {
     }
   }
   
-  public void writeAnswer() {}
+  public void writeAnswer(final String questionID, String answerText, Question question) {
+    setPrevPassed(false);
+    Answer       answer   = new Answer(questionID, answerText);
+    final String answerID = answer.getUsername() + answer.getPostTime();
+    currentUser.addAnswer(answerID);
+    db.child("answer/" + answerID)
+      .setValue(answer, new DatabaseReference.CompletionListener() {
+        @Override
+        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+          if (databaseError == null) {
+            setPrevPassed(true);
+          } else {
+            setPrevPassed(false);
+          }
+        }
+      });
+    question.setAnswer(answerID);
+    db.child("question/" + questionID)
+      .setValue(question, new DatabaseReference.CompletionListener() {
+        @Override
+        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+          if (databaseError == null) {
+            setPrevPassed(true);
+          } else {
+            Toast.makeText(App.get(), "Failed to answer question", Toast.LENGTH_SHORT).show();
+            db.child("answer/" + answerID).removeValue();
+            currentUser.getAnswers().remove(answerID);
+          }
+        }
+      });
+    db.child("user/" + currentUsername)
+      .setValue(currentUser, new DatabaseReference.CompletionListener() {
+        @Override
+        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+          if (databaseError == null) {
+            Toast.makeText(App.get(), "Answer asked successfully", Toast.LENGTH_SHORT).show();
+          } else {
+            Toast.makeText(App.get(), "Failed to answer question", Toast.LENGTH_SHORT).show();
+            db.child("answer/" + answerID).removeValue();
+            db.child("question/" + questionID + "/answers/" + answerID).removeValue();
+            currentUser.getAnswers().remove(answerID);
+          }
+        }
+      });
+    
+  }
   
   private void getUsernameFromEmail(final String email) {
     db.child("account").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -230,7 +276,7 @@ public class FirebaseHandler {
         for (DataSnapshot child : dataSnapshot.getChildren()) {
           if (child.getKey().equals(username)) {
             User user = child.getValue(User.class);
-            if(currentUsername == null) {
+            if (currentUsername == null) {
               setCurrentUser(user);
             } else {
               getDelegate().onReadUserSuccess(user);
