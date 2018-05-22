@@ -19,7 +19,7 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/list_image"
+                android:id="@+id/qlist_image"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/emptyimage"
@@ -31,28 +31,28 @@
                 app:civ_border_color="@color/photo_frame"/>
 
             <TextView
-                android:id="@+id/question_list"
+                android:id="@+id/question_qlist"
                 style="@style/list_item_qa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/list_image"/>
+                android:layout_toEndOf="@+id/qlist_image"/>
 
             <TextView
-                android:id="@+id/username_list"
+                android:id="@+id/username_qlist"
                 style="@style/list_item_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/question_list"
-                android:layout_toEndOf="@+id/list_image"
+                android:layout_below="@+id/question_qlist"
+                android:layout_toEndOf="@+id/qlist_image"
                 android:text="worldsmostinterestingman"/>
 
             <TextView
-                android:id="@+id/datetime_list"
+                android:id="@+id/datetime_qlist"
                 style="@style/list_item_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/username_list"
-                android:layout_toEndOf="@+id/list_image"
+                android:layout_below="@+id/username_qlist"
+                android:layout_toEndOf="@+id/qlist_image"
                 android:text="01/01/1980 24:00"/>
 
         </RelativeLayout>
