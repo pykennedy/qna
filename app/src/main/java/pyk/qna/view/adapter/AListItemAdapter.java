@@ -14,56 +14,57 @@ import java.util.List;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import pyk.qna.R;
+import pyk.qna.controller.Utility;
 import pyk.qna.controller.activity.MainActivity;
 import pyk.qna.model.firebase.FirebaseHandler;
 import pyk.qna.model.object.Answer;
 import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
 
-public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.ItemAdapterViewHolder>
+public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.ItemAdapterViewHolder>
     implements FirebaseHandler.Delegate {
   
-  private List<Question> questions = new ArrayList<Question>();
+  private List<Answer> answers = new ArrayList<Answer>();
   Context     context;
   FrameLayout frameLayout;
-  final MainActivity mainActivity;
   
-  public QListItemAdapter(Context context, FrameLayout frameLayout, MainActivity mainActivity) {
+  public AListItemAdapter(Context context, FrameLayout frameLayout) {
     this.context = context;
     this.frameLayout = frameLayout;
-    this.mainActivity = mainActivity;
-    
-    FirebaseHandler fb = new FirebaseHandler();
-    fb.setDelegate(this);
-    fb.readAllQuestions();
   }
   
   @Override
   public ItemAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int index) {
-    View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.question_item, viewGroup,
+    View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.answer_item, viewGroup,
                                                                        false);
     return new ItemAdapterViewHolder(inflate, frameLayout);
   }
   
   @Override
   public void onBindViewHolder(ItemAdapterViewHolder itemAdapterViewHolder, int index) {
-    itemAdapterViewHolder.update(questions.get((getItemCount() - 1) - index));
+    itemAdapterViewHolder.update(answers.get((getItemCount() - 1) - index));
   }
   
   @Override
-  public int getItemCount() { return (questions == null) ? 0 : questions.size(); }
+  public int getItemCount() { return (answers == null) ? 0 : answers.size(); }
   
-  private void insertItem(Question question) {
-    for (int i = 0; i < questions.size() - 1; i++) {
-      String q1 = questions.get(i).getUsername() + questions.get(i).getPostTime();
-      String q2 = question.getUsername() + question.getPostTime();
+  private void insertItem(Answer answer) {
+    for (int i = 0; i < answers.size() - 1; i++) {
+      String q1 = answers.get(i).getUsername() + answers.get(i).getPostTime();
+      String q2 = answer.getUsername() + answer.getPostTime();
       if (q1.equals(q2)) {
-        questions.set(i, question);
+        answers.set(i, answer);
         return;
       }
     }
-    questions.add(question);
+    answers.add(answer);
     notifyDataSetChanged();
+  }
+  
+  public void updateList(String questionID) {
+    FirebaseHandler fb = new FirebaseHandler();
+    fb.setDelegate(this);
+    fb.readAllAnswers(questionID);
   }
   
   @Override public void onLoginSuccess(String successType) {}
@@ -72,12 +73,11 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
   
   @Override public void onReadUserSuccess(User user)       {}
   
-  @Override public void onReadQuestionSuccess(Question question, boolean isList) {
-    insertItem(question);
+  @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
+  
+  @Override public void onReadAnswerSuccess(Answer answer) {
+    insertItem(answer);
   }
-  
-  @Override public void onReadAnswerSuccess(Answer result) {}
-  
   
   class ItemAdapterViewHolder extends RecyclerView.ViewHolder {
     TextView title;
@@ -87,7 +87,7 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
     
     public ItemAdapterViewHolder(View itemView, FrameLayout frameLayout) {
       super(itemView);
-      title = (TextView) itemView.findViewById(R.id.question_qlist);
+      title = (TextView) itemView.findViewById(R.id.answer_list);
       username = (TextView) itemView.findViewById(R.id.username_qlist);
       postTime = (TextView) itemView.findViewById(R.id.datetime_qlist);
       
@@ -99,30 +99,24 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
               .blurRadius(25f);
       blurView.setClipToOutline(true);
       
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          mainActivity.switchToQuestion(title.getText().toString(), username.getText().toString() +
-                                                                    postTime.getText().toString(),
-                                        getQuestion(username.getText().toString() +
-                                                    postTime.getText().toString()));
-          
-        }
-      });
+      if(title.getText().toString().equals("")) {
+        itemView.setVisibility(View.INVISIBLE);
+      }
     }
     
-    private Question getQuestion(String questionID) {
-      for (Question question : questions) {
-        if ((question.getUsername() + question.getPostTime()).equals(questionID)) {
-          return question;
+    private Answer getAnswer(String answerID) {
+      for (Answer answer : answers) {
+        if (Utility.getIDFromObject(null, answer).equals(answerID)) {
+          return answer;
         }
       }
       return null;
     }
     
-    void update(Question q) {
-      title.setText(q.getQuestionText());
-      username.setText(q.getUsername());
-      postTime.setText(q.getPostTime());
+    void update(Answer a) {
+      title.setText(a.getAnswerText());
+      username.setText(a.getUsername());
+      postTime.setText(a.getPostTime());
     }
     
   }

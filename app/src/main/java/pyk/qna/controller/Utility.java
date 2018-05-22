@@ -19,10 +19,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import pyk.qna.App;
+import pyk.qna.model.object.Answer;
+import pyk.qna.model.object.Question;
 
 public class Utility {
   public static String cleanEmail(String email) {
     return email.replace('@', 'a').replace('.', 'd');
+  }
+  
+  public static String getIDFromObject(Question question, Answer answer) {
+    if(question != null) {
+      return question.getUsername() + question.getPostTime();
+    } else if(answer != null) {
+      return answer.getUsername() + answer.getPostTime();
+    }
+    return null;
   }
   
   public static Bitmap getBitmapFromDrawable(int resourceID) {

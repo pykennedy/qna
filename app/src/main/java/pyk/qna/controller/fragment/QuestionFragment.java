@@ -11,12 +11,13 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import pyk.qna.R;
-import pyk.qna.controller.activity.MainActivity;
-import pyk.qna.view.adapter.QListItemAdapter;
+import pyk.qna.view.adapter.AListItemAdapter;
 import pyk.qna.view.custom.HeaderDecoration;
 
 public class QuestionFragment extends Fragment {
   RecyclerView recyclerView;
+  AListItemAdapter itemAdapter;
+  
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class QuestionFragment extends Fragment {
     recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_home_list);
     
     FrameLayout      frameLayout = (FrameLayout) getActivity().findViewById(R.id.root);
-    QListItemAdapter itemAdapter = new QListItemAdapter(getActivity(), frameLayout, (MainActivity)getActivity());
+    itemAdapter = new AListItemAdapter(getActivity(), frameLayout);
     recyclerView.setAdapter(itemAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -42,7 +43,7 @@ public class QuestionFragment extends Fragment {
                                                    .inflate(R.layout.question_text)
                                                    .parallax(0.35f)
                                                    .build());
-    // TODO: update AListItemAdapter to show answers for w/e question
+    itemAdapter.updateList(questionID);
   }
   
 }

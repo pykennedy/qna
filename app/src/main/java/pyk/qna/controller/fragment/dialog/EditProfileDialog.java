@@ -22,13 +22,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import pyk.qna.App;
 import pyk.qna.R;
 import pyk.qna.controller.Utility;
 import pyk.qna.model.firebase.FirebaseHandler;
+import pyk.qna.model.object.Answer;
 import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
 
@@ -136,5 +136,5 @@ public class EditProfileDialog extends DialogFragment
   
   @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
   
-  @Override public void onReadAnswerSuccess(List<String> result)                 {}
+  @Override public void onReadAnswerSuccess(Answer result)                       {}
 }

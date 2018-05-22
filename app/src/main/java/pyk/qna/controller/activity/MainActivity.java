@@ -12,8 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
@@ -26,6 +24,7 @@ import pyk.qna.controller.fragment.dialog.EditProfileDialog;
 import pyk.qna.controller.fragment.dialog.LoginDialog;
 import pyk.qna.controller.fragment.dialog.QuestionDialog;
 import pyk.qna.model.firebase.FirebaseHandler;
+import pyk.qna.model.object.Answer;
 import pyk.qna.model.object.Question;
 import pyk.qna.model.object.User;
 
@@ -36,7 +35,7 @@ public class MainActivity extends FragmentActivity
   BlurView         blurViewBottom;
   TextView         bottomTV;
   QuestionFragment questionFragment;
-  Question currentQuestion;
+  Question         currentQuestion;
   
   public static Drawable          background;
   public static FrameLayout       sFrameLayout;
@@ -69,6 +68,28 @@ public class MainActivity extends FragmentActivity
     pager = (ViewPager) findViewById(R.id.vp_activity);
     pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
     pager.setAdapter(pagerAdapter);
+    pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+      
+      @Override public void onPageSelected(int position) {
+        
+        switch (position) {
+          case 0:
+            if (!bottomTV.getText().toString().equals("log in")) {
+              bottomTV.setText("question");
+            }
+            break;
+          case 1:
+            if (!bottomTV.getText().toString().equals("log in")) {
+              bottomTV.setText("answer");
+            }
+            break;
+        }
+      }
+      
+      @Override public void onPageScrollStateChanged(int state) {}
+    });
     
     setupBlurView();
   }
@@ -108,7 +129,6 @@ public class MainActivity extends FragmentActivity
     currentQuestionID = questionID;
     currentQuestion = question;
     pager.setCurrentItem(1);
-    bottomTV.setText("answer");
   }
   
   private void setupBlurView() {
@@ -143,8 +163,8 @@ public class MainActivity extends FragmentActivity
   
   @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
   
-  @Override public void onReadAnswerSuccess(List<String> result)                 {}
-  
+  @Override public void onReadAnswerSuccess(Answer result)                       {}
+
   private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
     public ScreenSlidePagerAdapter(FragmentManager fm) {
       super(fm);

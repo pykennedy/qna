@@ -47,7 +47,7 @@ public class FirebaseHandler {
     
     void onReadQuestionSuccess(Question question, boolean isList);
     
-    void onReadAnswerSuccess(List<String> result);
+    void onReadAnswerSuccess(Answer result);
   }
   
   private WeakReference<Delegate> delegate;
@@ -291,15 +291,17 @@ public class FirebaseHandler {
     });
   }
   
-  public List<Question> readAllQuestions() {
+  public void readAllQuestions() {
     db.child("question").addChildEventListener(new ChildEventListener() {
       @Override public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Question question = dataSnapshot.getValue(Question.class);
+        FirebaseCache.addToQList(question);
         getDelegate().onReadQuestionSuccess(question, true);
       }
       
       @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {
         Question question = dataSnapshot.getValue(Question.class);
+        FirebaseCache.addToQList(question);
         getDelegate().onReadQuestionSuccess(question, true);
       }
       
@@ -309,13 +311,43 @@ public class FirebaseHandler {
       
       @Override public void onCancelled(DatabaseError databaseError) {}
     });
-    
-    return null;
   }
   
-  public void readQuestion() {}
-  
-  public void readAnswer()   {}
+public void readAllAnswers(String questionID)   {
+    final List<String> answerIDs = FirebaseCache.getQ(questionID).getAnswers();
+    if (answerIDs == null) {
+      getDelegate().onReadAnswerSuccess(new Answer());
+      return;
+    }
+    db.child("answer").addChildEventListener(new ChildEventListener() {
+      @Override public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        Answer answer = dataSnapshot.getValue(Answer.class);
+        for (String id : answerIDs) {
+          if(Utility.getIDFromObject(null, answer).equals(id)) {
+            FirebaseCache.addToAList(answer);
+            getDelegate().onReadAnswerSuccess(answer);
+          }
+        }
+        
+      }
+    
+      @Override public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        Answer answer = dataSnapshot.getValue(Answer.class);
+        for (String id : answerIDs) {
+          if(Utility.getIDFromObject(null, answer).equals(id)) {
+            FirebaseCache.addToAList(answer);
+            getDelegate().onReadAnswerSuccess(answer);
+          }
+        }
+      }
+    
+      @Override public void onChildRemoved(DataSnapshot dataSnapshot) {}
+    
+      @Override public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+    
+      @Override public void onCancelled(DatabaseError databaseError) {}
+    });
+  }
   
   private boolean prevPassed() {
     return chainChecks;
