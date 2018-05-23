@@ -39,7 +39,7 @@
                 android:layout_toEndOf="@+id/alist_image"/>
 
             <TextView
-                android:id="@+id/username_qlist"
+                android:id="@+id/username_alist"
                 style="@style/list_item_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,13 +48,26 @@
                 android:text="worldsmostinterestingman"/>
 
             <TextView
-                android:id="@+id/datetime_qlist"
+                android:id="@+id/datetime_alist"
                 style="@style/list_item_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/username_qlist"
+                android:layout_below="@+id/username_alist"
                 android:layout_toEndOf="@+id/alist_image"
                 android:text="01/01/1980 24:00"/>
+            <TextView
+                android:id="@+id/upvotes_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/answer_list"
+                style="@style/list_item_qa"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="+"/>
 
         </RelativeLayout>
 

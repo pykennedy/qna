@@ -12,18 +12,18 @@ public class FirebaseCache {
   private static List<Answer>   alist = new ArrayList<>();
   
   public static void addToQList(Question question) {
-      qlist.remove(question);
+    qlist.remove(question);
     qlist.add(question);
   }
   
   public static void addToAList(Answer answer) {
-      alist.remove(answer);
+    alist.remove(answer);
     alist.add(answer);
   }
   
   public static Question getQ(String questionID) {
     for (Question q : qlist) {
-      if(Utility.getIDFromObject(q, null).equals(questionID)) {
+      if (Utility.getIDFromObject(q, null).equals(questionID)) {
         return q;
       }
     }
@@ -32,7 +32,7 @@ public class FirebaseCache {
   
   public static Answer getA(String answerID) {
     for (Answer a : alist) {
-      if(Utility.getIDFromObject(null, a).equals(answerID)) {
+      if (Utility.getIDFromObject(null, a).equals(answerID)) {
         return a;
       }
     }
