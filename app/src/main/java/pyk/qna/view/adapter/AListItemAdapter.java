@@ -13,6 +13,7 @@ import java.util.List;
 
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
+import pyk.qna.App;
 import pyk.qna.R;
 import pyk.qna.controller.Utility;
 import pyk.qna.controller.activity.MainActivity;
@@ -35,7 +36,8 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
   
   @Override
   public ItemAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int index) {
-    View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.answer_item, viewGroup,
+    View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.answer_item,
+                                                                       viewGroup,
                                                                        false);
     return new ItemAdapterViewHolder(inflate, frameLayout);
   }
@@ -49,11 +51,12 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
   public int getItemCount() { return (answers == null) ? 0 : answers.size(); }
   
   private void insertItem(Answer answer) {
-    for (int i = 0; i < answers.size() - 1; i++) {
-      String q1 = answers.get(i).getUsername() + answers.get(i).getPostTime();
-      String q2 = answer.getUsername() + answer.getPostTime();
-      if (q1.equals(q2)) {
+    for (int i = 0; i < answers.size(); i++) {
+      String a1 = answers.get(i).getUsername() + answers.get(i).getPostTime();
+      String a2 = answer.getUsername() + answer.getPostTime();
+      if (a1.equals(a2)) {
         answers.set(i, answer);
+        notifyDataSetChanged();
         return;
       }
     }
@@ -62,16 +65,17 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
   }
   
   public void updateList(String questionID) {
+    answers = new ArrayList<>();
     FirebaseHandler fb = new FirebaseHandler();
     fb.setDelegate(this);
     fb.readAllAnswers(questionID);
   }
   
-  @Override public void onLoginSuccess(String successType) {}
+  @Override public void onLoginSuccess(String successType)                       {}
   
-  @Override public void onLoginFailed(String errorType)    {}
+  @Override public void onLoginFailed(String errorType)                          {}
   
-  @Override public void onReadUserSuccess(User user)       {}
+  @Override public void onReadUserSuccess(User user)                             {}
   
   @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
   
@@ -83,13 +87,27 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
     TextView title;
     TextView username;
     TextView postTime;
+    TextView upVotes;
     BlurView blurView;
+    View     iv;
     
     public ItemAdapterViewHolder(View itemView, FrameLayout frameLayout) {
       super(itemView);
+      iv = itemView;
       title = (TextView) itemView.findViewById(R.id.answer_list);
-      username = (TextView) itemView.findViewById(R.id.username_qlist);
-      postTime = (TextView) itemView.findViewById(R.id.datetime_qlist);
+      username = (TextView) itemView.findViewById(R.id.username_alist);
+      postTime = (TextView) itemView.findViewById(R.id.datetime_alist);
+      upVotes = (TextView) itemView.findViewById(R.id.upvotes_list);
+      
+      upVotes.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          if (FirebaseHandler.getFb().getCurrentUsername() != null) {
+            FirebaseHandler fb     = FirebaseHandler.getFb();
+            String          userID = username.getText().toString() + postTime.getText().toString();
+            fb.writeUpvote(getAnswer(userID));
+          }
+        }
+      });
       
       blurView = itemView.findViewById(R.id.blurItemView);
       
@@ -98,10 +116,6 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
               .blurAlgorithm(new RenderScriptBlur(context))
               .blurRadius(25f);
       blurView.setClipToOutline(true);
-      
-      if(title.getText().toString().equals("")) {
-        itemView.setVisibility(View.INVISIBLE);
-      }
     }
     
     private Answer getAnswer(String answerID) {
@@ -117,6 +131,20 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
       title.setText(a.getAnswerText());
       username.setText(a.getUsername());
       postTime.setText(a.getPostTime());
+      if (a.getUpvotes() != null) {
+        upVotes.setText("+" + a.getUpvotes().size());
+      }
+      
+      if (title.getText().toString().equals("")) {
+        itemView.setVisibility(View.INVISIBLE);
+      } else {
+        itemView.setVisibility(View.VISIBLE);
+      }
+      
+      if (a.getUpvotes() != null && a.getUpvotes().contains(
+          FirebaseHandler.getFb().getCurrentUsername())) {
+        upVotes.setTextColor(App.get().getResources().getColor(R.color.colorPrimaryAccent));
+      }
     }
     
   }

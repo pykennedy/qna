@@ -41,4 +41,8 @@ public class Answer {
   public List<String> getUpvotes() {
     return upvotes;
   }
+  
+  public void initUpvotes() {
+    upvotes = new ArrayList<>();
+  }
 }

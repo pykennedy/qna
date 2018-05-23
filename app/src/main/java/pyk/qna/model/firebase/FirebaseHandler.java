@@ -230,6 +230,17 @@ public class FirebaseHandler {
     
   }
   
+  public void writeUpvote(Answer answer) {
+    if(answer.getUpvotes() == null) {
+      answer.initUpvotes();
+    }
+    answer.getUpvotes().remove(currentUsername);
+    answer.getUpvotes().add(currentUsername);
+    
+    db.child("answer/" + Utility.getIDFromObject(null, answer))
+      .setValue(answer);
+  }
+  
   private void getUsernameFromEmail(final String email) {
     db.child("account").addListenerForSingleValueEvent(new ValueEventListener() {
       @Override public void onDataChange(DataSnapshot dataSnapshot) {

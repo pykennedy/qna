@@ -54,7 +54,7 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
   public int getItemCount() { return (questions == null) ? 0 : questions.size(); }
   
   private void insertItem(Question question) {
-    for (int i = 0; i < questions.size() - 1; i++) {
+    for (int i = 0; i < questions.size(); i++) {
       String q1 = questions.get(i).getUsername() + questions.get(i).getPostTime();
       String q2 = question.getUsername() + question.getPostTime();
       if (q1.equals(q2)) {
