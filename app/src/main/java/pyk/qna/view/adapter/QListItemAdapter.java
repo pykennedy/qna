@@ -11,9 +11,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import pyk.qna.R;
+import pyk.qna.controller.Utility;
 import pyk.qna.controller.activity.MainActivity;
 import pyk.qna.model.firebase.FirebaseHandler;
 import pyk.qna.model.object.Answer;
@@ -84,12 +86,14 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
     TextView username;
     TextView postTime;
     BlurView blurView;
+    CircleImageView image;
     
     public ItemAdapterViewHolder(View itemView, FrameLayout frameLayout) {
       super(itemView);
       title = (TextView) itemView.findViewById(R.id.question_qlist);
       username = (TextView) itemView.findViewById(R.id.username_qlist);
       postTime = (TextView) itemView.findViewById(R.id.datetime_qlist);
+      image = (CircleImageView) itemView.findViewById(R.id.qlist_image);
       
       blurView = itemView.findViewById(R.id.blurItemView);
       
@@ -123,6 +127,10 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
       title.setText(q.getQuestionText());
       username.setText(q.getUsername());
       postTime.setText(q.getPostTime());
+      String image64 = MainActivity.userImageMap.get(q.getUsername());
+      image.setImageBitmap(
+          (image64 == null) ? Utility.getBitmapFromDrawable(R.drawable.emptyimage)
+                            : Utility.base64ToBitmap(image64));
     }
     
   }

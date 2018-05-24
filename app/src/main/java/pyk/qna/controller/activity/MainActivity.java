@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
@@ -36,6 +38,8 @@ public class MainActivity extends FragmentActivity
   TextView         bottomTV;
   QuestionFragment questionFragment;
   Question         currentQuestion;
+  CircleImageView image;
+  public static HashMap<String, String> userImageMap = new HashMap<>();
   
   public static Drawable          background;
   public static FrameLayout       sFrameLayout;
@@ -57,13 +61,14 @@ public class MainActivity extends FragmentActivity
     blurViewTop = (BlurView) findViewById(R.id.blurViewTop);
     blurViewBottom = (BlurView) findViewById(R.id.blurViewBottom);
     
-    CircleImageView image = (CircleImageView) findViewById(R.id.actionbar_image);
+    image = (CircleImageView) findViewById(R.id.actionbar_image);
     image.setOnClickListener(this);
     
     bottomTV = (TextView) findViewById(R.id.lqa);
     bottomTV.setOnClickListener(this);
     
     FirebaseHandler.getFb().setDelegate(this);
+    FirebaseHandler.getFb().readAllUsers();
     
     pager = (ViewPager) findViewById(R.id.vp_activity);
     pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -151,7 +156,9 @@ public class MainActivity extends FragmentActivity
     Toast.makeText(this, successType, Toast.LENGTH_SHORT).show();
     loginDialogFragment.dismiss();
     bottomTV.setText("question");
-    FirebaseHandler.getFb().readAllQuestions();
+    FirebaseHandler fb = FirebaseHandler.getFb();
+    fb.readAllQuestions();
+    fb.readUser(fb.getCurrentUsername());
   }
   
   @Override public void onLoginFailed(String errorType) {
@@ -159,7 +166,14 @@ public class MainActivity extends FragmentActivity
     loginDialogFragment.stopSpinning();
   }
   
-  @Override public void onReadUserSuccess(User user)                             {}
+  @Override public void onReadUserSuccess(User user)                             {
+    if(user.getUsername().equals(FirebaseHandler.getFb().getCurrentUsername())) {
+      image.setImageBitmap(
+          (user.getPhoto() == null) ? Utility.getBitmapFromDrawable(R.drawable.emptyimage)
+                                    : Utility.base64ToBitmap(user.getPhoto()));
+    }
+    userImageMap.put(user.getUsername(), user.getPhoto());
+  }
   
   @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
   

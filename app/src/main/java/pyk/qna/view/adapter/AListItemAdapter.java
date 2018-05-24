@@ -2,7 +2,6 @@ package pyk.qna.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
 import pyk.qna.App;
@@ -31,8 +31,9 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
     implements FirebaseHandler.Delegate {
   
   private List<Answer> answers = new ArrayList<Answer>();
-  Context     context;
-  FrameLayout frameLayout;
+  private Context               context;
+  private FrameLayout           frameLayout;
+  private ItemAdapterViewHolder iavh;
   
   public AListItemAdapter(Context context, FrameLayout frameLayout) {
     this.context = context;
@@ -49,6 +50,7 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
   
   @Override
   public void onBindViewHolder(ItemAdapterViewHolder itemAdapterViewHolder, int index) {
+    iavh = itemAdapterViewHolder;
     itemAdapterViewHolder.setIsRecyclable(false);
     itemAdapterViewHolder.update(answers.get(index));
   }
@@ -61,10 +63,16 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
     Date currentPostTime = null;
     int  walkingUpvotes;
     Date walkingPostTime = null;
+    if (answers.size() < 1) {
+      return;
+    }
     for (int i = 0; i < answers.size(); i++) {
       currentUpvotes = (answers.get(i).getUpvotes() != null) ? answers.get(i).getUpvotes().size()
                                                              : 0;
       try {
+        if (answers.get(i).getPostTime() == null) {
+          return;
+        }
         currentPostTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(
             answers.get(i).getPostTime());
       } catch (ParseException e) {
@@ -72,12 +80,14 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
       for (int j = i + 1; j < answers.size(); j++) {
         walkingUpvotes = (answers.get(j).getUpvotes() != null) ? answers.get(j).getUpvotes().size()
                                                                : 0;
+        if (answers.get(j).getPostTime() == null) {
+          return;
+        }
         try {
           walkingPostTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(
               answers.get(j).getPostTime());
         } catch (ParseException e) {
         }
-        Log.e("asdf", walkingUpvotes + " " + currentUpvotes);
         if (walkingUpvotes > currentUpvotes) {
           Answer temp = answers.get(i);
           answers.set(i, answers.get(j));
@@ -98,8 +108,6 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
       String a2 = answer.getUsername() + answer.getPostTime();
       if (a1.equals(a2)) {
         answers.set(i, answer);
-        answers.remove(i);
-        answers.add(answer);
         sortList();
         notifyDataSetChanged();
         return;
@@ -108,6 +116,9 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
     
     answers.remove(answer);
     answers.add(answer);
+    if (answers.size() > 1 && answers.get(0).getAnswerText() == null) {
+      answers.remove(0);
+    }
     sortList();
     notifyDataSetChanged();
   }
@@ -132,12 +143,13 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
   }
   
   class ItemAdapterViewHolder extends RecyclerView.ViewHolder {
-    TextView title;
-    TextView username;
-    TextView postTime;
-    TextView upVotes;
-    BlurView blurView;
-    View     iv;
+    TextView        title;
+    TextView        username;
+    TextView        postTime;
+    TextView        upVotes;
+    BlurView        blurView;
+    View            iv;
+    CircleImageView image;
     
     public ItemAdapterViewHolder(View itemView, FrameLayout frameLayout) {
       super(itemView);
@@ -146,6 +158,7 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
       username = (TextView) itemView.findViewById(R.id.username_alist);
       postTime = (TextView) itemView.findViewById(R.id.datetime_alist);
       upVotes = (TextView) itemView.findViewById(R.id.upvotes_list);
+      image = (CircleImageView) itemView.findViewById(R.id.alist_image);
       
       upVotes.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
@@ -182,16 +195,21 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
       if (a.getUpvotes() != null) {
         upVotes.setText("+" + a.getUpvotes().size());
       }
+      String image64 = MainActivity.userImageMap.get(a.getUsername());
+      image.setImageBitmap(
+          (image64 == null) ? Utility.getBitmapFromDrawable(R.drawable.emptyimage)
+                            : Utility.base64ToBitmap(image64));
+      
+      
+      if (a.getUpvotes() != null && a.getUpvotes().contains(
+          FirebaseHandler.getFb().getCurrentUsername())) {
+        upVotes.setTextColor(App.get().getResources().getColor(R.color.colorPrimaryAccent));
+      }
       
       if (title.getText().toString().equals("")) {
         itemView.setVisibility(View.INVISIBLE);
       } else {
         itemView.setVisibility(View.VISIBLE);
-      }
-      
-      if (a.getUpvotes() != null && a.getUpvotes().contains(
-          FirebaseHandler.getFb().getCurrentUsername())) {
-        upVotes.setTextColor(App.get().getResources().getColor(R.color.colorPrimaryAccent));
       }
     }
     
