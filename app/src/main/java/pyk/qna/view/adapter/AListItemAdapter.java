@@ -2,14 +2,19 @@ package pyk.qna.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import eightbitlab.com.blurview.BlurView;
 import eightbitlab.com.blurview.RenderScriptBlur;
@@ -44,11 +49,48 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
   
   @Override
   public void onBindViewHolder(ItemAdapterViewHolder itemAdapterViewHolder, int index) {
-    itemAdapterViewHolder.update(answers.get((getItemCount() - 1) - index));
+    itemAdapterViewHolder.setIsRecyclable(false);
+    itemAdapterViewHolder.update(answers.get(index));
   }
   
   @Override
   public int getItemCount() { return (answers == null) ? 0 : answers.size(); }
+  
+  private void sortList() {
+    int  currentUpvotes;
+    Date currentPostTime = null;
+    int  walkingUpvotes;
+    Date walkingPostTime = null;
+    for (int i = 0; i < answers.size(); i++) {
+      currentUpvotes = (answers.get(i).getUpvotes() != null) ? answers.get(i).getUpvotes().size()
+                                                             : 0;
+      try {
+        currentPostTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(
+            answers.get(i).getPostTime());
+      } catch (ParseException e) {
+      }
+      for (int j = i + 1; j < answers.size(); j++) {
+        walkingUpvotes = (answers.get(j).getUpvotes() != null) ? answers.get(j).getUpvotes().size()
+                                                               : 0;
+        try {
+          walkingPostTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).parse(
+              answers.get(j).getPostTime());
+        } catch (ParseException e) {
+        }
+        Log.e("asdf", walkingUpvotes + " " + currentUpvotes);
+        if (walkingUpvotes > currentUpvotes) {
+          Answer temp = answers.get(i);
+          answers.set(i, answers.get(j));
+          answers.set(j, temp);
+        } else if (walkingUpvotes == currentUpvotes && walkingPostTime.compareTo(currentPostTime) >
+                                                       0) {
+          Answer temp = answers.get(i);
+          answers.set(i, answers.get(j));
+          answers.set(j, temp);
+        }
+      }
+    }
+  }
   
   private void insertItem(Answer answer) {
     for (int i = 0; i < answers.size(); i++) {
@@ -56,11 +98,17 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
       String a2 = answer.getUsername() + answer.getPostTime();
       if (a1.equals(a2)) {
         answers.set(i, answer);
+        answers.remove(i);
+        answers.add(answer);
+        sortList();
         notifyDataSetChanged();
         return;
       }
     }
+    
+    answers.remove(answer);
     answers.add(answer);
+    sortList();
     notifyDataSetChanged();
   }
   
