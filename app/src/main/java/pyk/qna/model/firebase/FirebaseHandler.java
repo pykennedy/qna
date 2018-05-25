@@ -33,6 +33,7 @@ public class FirebaseHandler {
   private              boolean           chainChecks     = false;
   private              String            currentUsername = null;
   private              User              currentUser     = null;
+  private boolean loginAttempt;
   
   public static FirebaseHandler getFb() {
     return fb;
@@ -247,7 +248,7 @@ public class FirebaseHandler {
         for (DataSnapshot child : dataSnapshot.getChildren()) {
           if (child.getKey().equals(Utility.cleanEmail(email))) {
             try {
-              readUser(child.getValue().toString());
+              readUser(child.getValue().toString(), true);
             } catch (NullPointerException e) {
               Toast.makeText(App.get(), "Failure, try again", Toast.LENGTH_SHORT).show();
             }
@@ -281,13 +282,23 @@ public class FirebaseHandler {
     }
   }
   
-  public void readUser(final String username) {
+  private void setLoginAttempt(boolean loginAttempt) {
+    this.loginAttempt = loginAttempt;
+  }
+  
+  private boolean getLoginAttempt() {
+    return this.loginAttempt;
+  }
+  
+  public void readUser(final String username, boolean loginAttempt) {
+    setLoginAttempt(loginAttempt);
+    Log.e("asdf", getLoginAttempt()+"");
     db.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
       @Override public void onDataChange(DataSnapshot dataSnapshot) {
         for (DataSnapshot child : dataSnapshot.getChildren()) {
           if (child.getKey().equals(username)) {
             User user = child.getValue(User.class);
-            if (currentUsername == null) {
+            if (currentUsername == null && getLoginAttempt()) {
               setCurrentUser(user);
             } else {
               getDelegate().onReadUserSuccess(user);

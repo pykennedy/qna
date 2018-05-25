@@ -17,6 +17,7 @@ import eightbitlab.com.blurview.RenderScriptBlur;
 import pyk.qna.R;
 import pyk.qna.controller.Utility;
 import pyk.qna.controller.activity.MainActivity;
+import pyk.qna.controller.fragment.HomeFragment;
 import pyk.qna.model.firebase.FirebaseHandler;
 import pyk.qna.model.object.Answer;
 import pyk.qna.model.object.Question;
@@ -29,11 +30,14 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
   Context     context;
   FrameLayout frameLayout;
   final MainActivity mainActivity;
+  HomeFragment homeFragment;
   
-  public QListItemAdapter(Context context, FrameLayout frameLayout, MainActivity mainActivity) {
+  public QListItemAdapter(Context context, FrameLayout frameLayout, MainActivity mainActivity,
+                          HomeFragment homeFragment) {
     this.context = context;
     this.frameLayout = frameLayout;
     this.mainActivity = mainActivity;
+    this.homeFragment = homeFragment;
     
     FirebaseHandler fb = new FirebaseHandler();
     fb.setDelegate(this);
@@ -42,7 +46,8 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
   
   @Override
   public ItemAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int index) {
-    View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.question_item, viewGroup,
+    View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.question_item,
+                                                                       viewGroup,
                                                                        false);
     return new ItemAdapterViewHolder(inflate, frameLayout);
   }
@@ -82,10 +87,10 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
   
   
   class ItemAdapterViewHolder extends RecyclerView.ViewHolder {
-    TextView title;
-    TextView username;
-    TextView postTime;
-    BlurView blurView;
+    TextView        title;
+    TextView        username;
+    TextView        postTime;
+    BlurView        blurView;
     CircleImageView image;
     
     public ItemAdapterViewHolder(View itemView, FrameLayout frameLayout) {
@@ -110,6 +115,16 @@ public class QListItemAdapter extends RecyclerView.Adapter<QListItemAdapter.Item
                                         getQuestion(username.getText().toString() +
                                                     postTime.getText().toString()));
           
+        }
+      });
+      image.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          homeFragment.showProfileDialog(username.getText().toString());
+        }
+      });
+      username.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          homeFragment.showProfileDialog(username.getText().toString());
         }
       });
     }
