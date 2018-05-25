@@ -170,6 +170,18 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
         }
       });
       
+      title.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+    
+        }
+      });
+      
+      image.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+    
+        }
+      });
+      
       blurView = itemView.findViewById(R.id.blurItemView);
       
       blurView.setupWith(frameLayout)
