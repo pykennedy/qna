@@ -65,7 +65,7 @@ public class EditProfileDialog extends DialogFragment
     
     FirebaseHandler fb = FirebaseHandler.getFb();
     fb.setDelegate(this);
-    fb.readUser(fb.getCurrentUsername());
+    fb.readUser(fb.getCurrentUsername(), false);
     
     return dialog;
   }

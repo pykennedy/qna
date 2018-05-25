@@ -39,6 +39,7 @@ public class MainActivity extends FragmentActivity
   QuestionFragment questionFragment;
   Question         currentQuestion;
   CircleImageView image;
+  TextView topTV;
   public static HashMap<String, String> userImageMap = new HashMap<>();
   
   public static Drawable          background;
@@ -50,6 +51,7 @@ public class MainActivity extends FragmentActivity
   private       ViewPager         pager;
   private       PagerAdapter      pagerAdapter;
   private       String            currentQuestionID;
+  private String currentQuestionUsername;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class MainActivity extends FragmentActivity
     image = (CircleImageView) findViewById(R.id.actionbar_image);
     image.setOnClickListener(this);
     
+    topTV = (TextView) findViewById(R.id.title);
     bottomTV = (TextView) findViewById(R.id.lqa);
     bottomTV.setOnClickListener(this);
     
@@ -84,11 +87,13 @@ public class MainActivity extends FragmentActivity
             if (!bottomTV.getText().toString().equals("log in")) {
               bottomTV.setText("question");
             }
+            topTV.setText("qna");
             break;
           case 1:
             if (!bottomTV.getText().toString().equals("log in")) {
               bottomTV.setText("answer");
             }
+            topTV.setText(currentQuestionUsername + "'s q");
             break;
         }
       }
@@ -103,6 +108,7 @@ public class MainActivity extends FragmentActivity
     switch (view.getId()) {
       case R.id.lqa:
         if (bottomTV.getText().toString().equals("log in")) {
+          FirebaseHandler.getFb().setDelegate(this);
           loginDialogFragment = new LoginDialog();
           loginDialogFragment.show(getFragmentManager(), "LoginDialog");
         } else if (bottomTV.getText().toString().equals("question")) {
@@ -120,6 +126,7 @@ public class MainActivity extends FragmentActivity
           editProfileDialogFragment = new EditProfileDialog();
           editProfileDialogFragment.show(getFragmentManager(), "EditProfileDialog");
         } else {
+          FirebaseHandler.getFb().setDelegate(this);
           loginDialogFragment = new LoginDialog();
           loginDialogFragment.show(getFragmentManager(), "LoginDialog");
         }
@@ -133,6 +140,8 @@ public class MainActivity extends FragmentActivity
     questionFragment.updateQuestion(questionText, questionID);
     currentQuestionID = questionID;
     currentQuestion = question;
+    currentQuestionUsername = question.getUsername();
+    
     pager.setCurrentItem(1);
   }
   
@@ -151,6 +160,14 @@ public class MainActivity extends FragmentActivity
                   .blurAlgorithm(new RenderScriptBlur(this))
                   .blurRadius(radius);
   }
+  @Override
+  public void onBackPressed() {
+    if(pager.getCurrentItem() == 1) {
+      pager.setCurrentItem(0);
+    } else {
+      super.onBackPressed();
+    }
+  }
   
   @Override public void onLoginSuccess(String successType) {
     Toast.makeText(this, successType, Toast.LENGTH_SHORT).show();
@@ -158,7 +175,7 @@ public class MainActivity extends FragmentActivity
     bottomTV.setText("question");
     FirebaseHandler fb = FirebaseHandler.getFb();
     fb.readAllQuestions();
-    fb.readUser(fb.getCurrentUsername());
+    fb.readUser(fb.getCurrentUsername(), true);
   }
   
   @Override public void onLoginFailed(String errorType) {

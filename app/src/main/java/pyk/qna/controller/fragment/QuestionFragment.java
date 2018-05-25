@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import pyk.qna.R;
+import pyk.qna.controller.fragment.dialog.ViewProfileDialog;
 import pyk.qna.view.adapter.AListItemAdapter;
 import pyk.qna.view.custom.HeaderDecoration;
 
@@ -25,7 +26,7 @@ public class QuestionFragment extends Fragment {
     recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_home_list);
     
     FrameLayout      frameLayout = (FrameLayout) getActivity().findViewById(R.id.root);
-    itemAdapter = new AListItemAdapter(getActivity(), frameLayout);
+    itemAdapter = new AListItemAdapter(getActivity(), frameLayout, this);
     recyclerView.setAdapter(itemAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -33,7 +34,6 @@ public class QuestionFragment extends Fragment {
                                   .inflate(R.layout.question_text)
                                   .parallax(0.35f)
                                   .build());
-    
     return rootView;
   }
   
@@ -45,5 +45,9 @@ public class QuestionFragment extends Fragment {
                                                    .build());
     itemAdapter.updateList(questionID);
   }
-  
+  public void showProfileDialog(String username) {
+    ViewProfileDialog viewProfileDialog = new ViewProfileDialog();
+    viewProfileDialog.populateUserDetails(username);
+    viewProfileDialog.show(getActivity().getFragmentManager(), "ViewProfileDialog");
+  }
 }

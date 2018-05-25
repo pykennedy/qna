@@ -37,6 +37,34 @@
         android:visibility="gone"/>
 
     <TextView
+        android:id="@+id/tv_view_questions"
+        android:layout_below="@+id/tv_view_username"
+        android:layout_toStartOf="@+id/civ_view_image"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white_primary"
+        android:textSize="20sp"
+        android:text="234 q"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_view_answers"
+        android:layout_below="@+id/tv_view_username"
+        android:layout_toEndOf="@+id/civ_view_image"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white_primary"
+        android:textSize="20sp"
+        android:text="5 a"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
+    <TextView
         android:id="@+id/et_view_description"
         android:layout_width="280dp"
         android:layout_height="150dp"

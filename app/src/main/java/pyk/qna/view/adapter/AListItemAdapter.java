@@ -22,6 +22,7 @@ import pyk.qna.App;
 import pyk.qna.R;
 import pyk.qna.controller.Utility;
 import pyk.qna.controller.activity.MainActivity;
+import pyk.qna.controller.fragment.QuestionFragment;
 import pyk.qna.model.firebase.FirebaseHandler;
 import pyk.qna.model.object.Answer;
 import pyk.qna.model.object.Question;
@@ -34,10 +35,13 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
   private Context               context;
   private FrameLayout           frameLayout;
   private ItemAdapterViewHolder iavh;
+  private QuestionFragment      questionFragment;
   
-  public AListItemAdapter(Context context, FrameLayout frameLayout) {
+  public AListItemAdapter(Context context, FrameLayout frameLayout,
+                          QuestionFragment questionFragment) {
     this.context = context;
     this.frameLayout = frameLayout;
+    this.questionFragment = questionFragment;
   }
   
   @Override
@@ -170,15 +174,15 @@ public class AListItemAdapter extends RecyclerView.Adapter<AListItemAdapter.Item
         }
       });
       
-      title.setOnClickListener(new View.OnClickListener() {
+      username.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
-    
+          questionFragment.showProfileDialog(username.getText().toString());
         }
       });
       
       image.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
-    
+          questionFragment.showProfileDialog(username.getText().toString());
         }
       });
       
