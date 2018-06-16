@@ -93,7 +93,7 @@ public class FirebaseHandler {
       @Override public void onDataChange(DataSnapshot dataSnapshot) {
         for (DataSnapshot child : dataSnapshot.getChildren()) {
           // if username already exists, tell user to make a different one
-          if (child.getValue() != null && child.getValue().toString().equals(username)) {
+          if (child.getValue() != null && child.getKey().equals(username)) {
             getDelegate().onLoginFailed("Username already exists. Try again.");
             return;
           }
@@ -137,13 +137,16 @@ public class FirebaseHandler {
     });
   }
   
-  public void writeUser(User user) {
+  public void writeUser(final User user) {
     db.child("user/" + user.getUsername())
       .setValue(user, new DatabaseReference.CompletionListener() {
         @Override
         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+          
           if (databaseError == null) {
             Toast.makeText(App.get(), "Updates saved successfully", Toast.LENGTH_SHORT).show();
+            currentUser = user;
+            getDelegate().onReadUserSuccess(user);
           } else {
             Toast.makeText(App.get(), "Failed to save updates", Toast.LENGTH_SHORT).show();
           }
