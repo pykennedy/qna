@@ -34,7 +34,6 @@
         android:visibility="visible"
         android:layout_centerHorizontal="true"
         android:hint="email"
-        android:text="pykennedy@gmail.com"
         android:inputType="textEmailAddress"
         android:textColor="@color/white_primary"
         android:textColorHint="@color/white_primary_32"
@@ -48,7 +47,6 @@
         android:layout_below="@+id/et_login_email"
         android:layout_centerHorizontal="true"
         android:hint="password"
-        android:text="abcd1234"
         android:inputType="textPassword"
         android:textColor="@color/white_primary"
         android:textColorHint="@color/white_primary_32"
@@ -62,7 +60,6 @@
         android:layout_below="@+id/et_login_pw"
         android:visibility="gone"
         android:hint="username"
-        android:text="appleseed"
         android:textColor="@color/white_primary"
         android:textColorHint="@color/white_primary_32"
         android:textSize="24sp"/>
