@@ -1,7 +1,6 @@
 package pyk.qna.model.firebase;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -75,11 +74,9 @@ public class FirebaseHandler {
             @Override public void onComplete(@NonNull Task<AuthResult> task) {
               // if user created account, then add username to db
               if (task.isSuccessful()) {
-                Log.e("asdfasdfasdf", "createUserWithEmail:success", task.getException());
                 writeNewUser(email, username);
                 // if user failed to add account, tell user to retry
               } else {
-                Log.e("asdfasdfasdf", "createUserWithEmail:failure", task.getException());
                 getDelegate().onLoginFailed("Account creation failed. Try again");
               }
             }
@@ -295,7 +292,6 @@ public class FirebaseHandler {
   
   public void readUser(final String username, boolean loginAttempt) {
     setLoginAttempt(loginAttempt);
-    Log.e("asdf", getLoginAttempt()+"");
     db.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
       @Override public void onDataChange(DataSnapshot dataSnapshot) {
         for (DataSnapshot child : dataSnapshot.getChildren()) {
