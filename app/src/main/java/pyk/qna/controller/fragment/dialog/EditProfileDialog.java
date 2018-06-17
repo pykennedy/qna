@@ -27,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import pyk.qna.App;
 import pyk.qna.R;
 import pyk.qna.controller.Utility;
+import pyk.qna.controller.activity.MainActivity;
 import pyk.qna.model.firebase.FirebaseHandler;
 import pyk.qna.model.object.Answer;
 import pyk.qna.model.object.Question;
@@ -41,6 +42,7 @@ public class EditProfileDialog extends DialogFragment
   private Bitmap imageBM;
   TextView        username;
   CircleImageView circleImageView;
+  public CircleImageView circleImageViewActionBar;
   EditText        description;
   ProgressBar     progressBar;
   
@@ -132,6 +134,13 @@ public class EditProfileDialog extends DialogFragment
         (user.getPhoto() == null) ? Utility.getBitmapFromDrawable(R.drawable.emptyimage)
                                   : Utility.base64ToBitmap(user.getPhoto()));
     description.setText(user.getDescription());
+  
+    if(user.getUsername().equals(FirebaseHandler.getFb().getCurrentUsername())) {
+      circleImageViewActionBar.setImageBitmap(
+          (user.getPhoto() == null) ? Utility.getBitmapFromDrawable(R.drawable.emptyimage)
+                                    : Utility.base64ToBitmap(user.getPhoto()));
+    }
+    MainActivity.userImageMap.put(user.getUsername(), user.getPhoto());
   }
   
   @Override public void onReadQuestionSuccess(Question question, boolean isList) {}

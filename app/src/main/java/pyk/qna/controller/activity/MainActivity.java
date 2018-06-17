@@ -38,8 +38,8 @@ public class MainActivity extends FragmentActivity
   TextView         bottomTV;
   QuestionFragment questionFragment;
   Question         currentQuestion;
-  CircleImageView image;
-  TextView topTV;
+  CircleImageView  image;
+  TextView         topTV;
   public static HashMap<String, String> userImageMap = new HashMap<>();
   
   public static Drawable          background;
@@ -51,7 +51,7 @@ public class MainActivity extends FragmentActivity
   private       ViewPager         pager;
   private       PagerAdapter      pagerAdapter;
   private       String            currentQuestionID;
-  private String currentQuestionUsername;
+  private       String            currentQuestionUsername;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +124,7 @@ public class MainActivity extends FragmentActivity
         if (FirebaseHandler.getFb().getCurrentUsername() != null) {
           Utility.handlePermission(this);
           editProfileDialogFragment = new EditProfileDialog();
+          editProfileDialogFragment.circleImageViewActionBar = image;
           editProfileDialogFragment.show(getFragmentManager(), "EditProfileDialog");
         } else {
           FirebaseHandler.getFb().setDelegate(this);
@@ -160,9 +161,10 @@ public class MainActivity extends FragmentActivity
                   .blurAlgorithm(new RenderScriptBlur(this))
                   .blurRadius(radius);
   }
+  
   @Override
   public void onBackPressed() {
-    if(pager.getCurrentItem() == 1) {
+    if (pager.getCurrentItem() == 1) {
       pager.setCurrentItem(0);
     } else {
       super.onBackPressed();
@@ -183,11 +185,13 @@ public class MainActivity extends FragmentActivity
     loginDialogFragment.stopSpinning();
   }
   
-  @Override public void onReadUserSuccess(User user)                             {
-    if(user.getUsername().equals(FirebaseHandler.getFb().getCurrentUsername())) {
+  @Override public void onReadUserSuccess(User user) {
+    
+    if (user.getUsername().equals(FirebaseHandler.getFb().getCurrentUsername())) {
       image.setImageBitmap(
           (user.getPhoto() == null) ? Utility.getBitmapFromDrawable(R.drawable.emptyimage)
                                     : Utility.base64ToBitmap(user.getPhoto()));
+      
     }
     userImageMap.put(user.getUsername(), user.getPhoto());
   }
@@ -195,7 +199,7 @@ public class MainActivity extends FragmentActivity
   @Override public void onReadQuestionSuccess(Question question, boolean isList) {}
   
   @Override public void onReadAnswerSuccess(Answer result)                       {}
-
+  
   private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
     public ScreenSlidePagerAdapter(FragmentManager fm) {
       super(fm);
